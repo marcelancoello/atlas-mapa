@@ -15,7 +15,7 @@ export function PageHeader({ title, subtitle, actions, breadcrumbs }: {
         <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
           {crumbs.map((c, i) => (
             <span key={i} className="flex items-center gap-1">
-              {c.to ? <Link to={c.to} className="hover:text-foreground">{c.label}</Link> : <span className="capitalize">{c.label}</span>}
+              {"to" in c && c.to ? <Link to={c.to} className="hover:text-foreground">{c.label}</Link> : <span className="capitalize">{c.label}</span>}
               {i < crumbs.length - 1 && <ChevronRight className="h-3 w-3" />}
             </span>
           ))}

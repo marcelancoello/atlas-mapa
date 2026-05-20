@@ -33,7 +33,8 @@ function EmployeeDetail() {
       actual: c.averageScore, expected: c.expectedLevel,
     }));
 
-  const byDomain: Record<string, typeof assessment.competencies> = { "Técnica": [], "Soft": [] };
+  type CA = NonNullable<typeof assessment>["competencies"][number];
+  const byDomain: Record<string, CA[]> = { "Técnica": [], "Soft": [] };
   assessment?.competencies.forEach((c) => {
     const d = competencies.find((x) => x.id === c.competencyId)?.domain ?? "Técnica";
     byDomain[d].push(c);
