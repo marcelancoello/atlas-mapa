@@ -6,7 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { CompetencyRadar } from "@/components/atlas/CompetencyRadar";
-import { Calendar, FileDown, GraduationCap, ChevronLeft, Check, ClipboardEdit } from "lucide-react";
+import { Calendar, FileDown, GraduationCap, ChevronLeft, Check, ClipboardEdit, ChevronDown, ExternalLink, Clock, Sparkles } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/empleados/$id")({
