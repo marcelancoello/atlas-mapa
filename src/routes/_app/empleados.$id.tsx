@@ -97,8 +97,26 @@ function EmployeeDetail() {
             </TabsList>
 
             <TabsContent value="comp" className="space-y-4">
-              {!assessment ? <EmptyState icon={GraduationCap} title="Sin assessment" message="Aún no se realizó un assessment." /> : (
+              {!assessment ? (
+                <EmptyState
+                  icon={GraduationCap}
+                  title="Sin assessment"
+                  message="Aún no se realizó un assessment."
+                  action={isOwner ? (
+                    <Button onClick={() => toast.success("Autoevaluación iniciada")}>
+                      <ClipboardEdit className="h-4 w-4 mr-1" />Iniciar autoevaluación
+                    </Button>
+                  ) : undefined}
+                />
+              ) : (
                 <>
+                  {isOwner && (
+                    <div className="flex justify-end">
+                      <Button onClick={() => toast.success("Autoevaluación iniciada")}>
+                        <ClipboardEdit className="h-4 w-4 mr-1" />Iniciar autoevaluación
+                      </Button>
+                    </div>
+                  )}
                   <Card className="bg-surface/60 border-border">
                     <CardHeader><CardTitle className="font-display">Perfil actual vs. esperado</CardTitle></CardHeader>
                     <CardContent><CompetencyRadar data={radarData} /></CardContent>
@@ -106,32 +124,32 @@ function EmployeeDetail() {
                   {(["Técnica", "Soft"] as const).map((dom) => (
                     <Card key={dom} className="bg-surface/60 border-border">
                       <CardHeader><CardTitle className="font-display text-base">{dom}</CardTitle></CardHeader>
-                      <CardContent className="p-0">
+                      <CardContent className="p-0 overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead className="bg-surface/80 text-xs uppercase text-muted-foreground">
                             <tr>
                               <th className="text-left p-3">Competencia</th>
-                              <th className="text-left p-3">Auto</th>
+                              <th className="text-left p-3">Autoevaluación</th>
                               <th className="text-left p-3">Líder</th>
                               <th className="text-left p-3">Promedio</th>
                               <th className="text-left p-3">Esperado</th>
                               <th className="text-left p-3">Gap</th>
+                              <th className="text-left p-3">Discrepancia</th>
                             </tr>
                           </thead>
                           <tbody>
+                            {byDomain[dom].length === 0 && (
+                              <tr><td colSpan={7} className="p-4 text-center text-xs text-muted-foreground">Sin competencias en este dominio.</td></tr>
+                            )}
                             {byDomain[dom].map((c) => (
                               <tr key={c.competencyId} className="border-t border-border/40">
-                                <td className="p-3 font-medium">
-                                  <div className="flex items-center gap-2">
-                                    {competencies.find((x) => x.id === c.competencyId)?.name}
-                                    {c.discrepancy && <DiscrepancyAlert />}
-                                  </div>
-                                </td>
+                                <td className="p-3 font-medium">{competencies.find((x) => x.id === c.competencyId)?.name}</td>
                                 <td className="p-3"><CompetencyLevelDots value={c.selfScore} /></td>
                                 <td className="p-3"><CompetencyLevelDots value={c.managerScore} /></td>
                                 <td className="p-3 font-mono">{c.averageScore.toFixed(1)}</td>
                                 <td className="p-3 font-mono">{c.expectedLevel}</td>
                                 <td className="p-3"><GapBadge gap={c.gap} severity={c.gapSeverity} /></td>
+                                <td className="p-3">{c.discrepancy ? <DiscrepancyAlert /> : <span className="text-muted-foreground/40 text-xs">—</span>}</td>
                               </tr>
                             ))}
                           </tbody>
