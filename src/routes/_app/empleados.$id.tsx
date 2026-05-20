@@ -171,55 +171,98 @@ function EmployeeDetail() {
                 <>
                   <Card className="bg-surface/60 border-border">
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-2">
                         <div>
-                          <div className="text-xs uppercase text-muted-foreground">Avance general</div>
-                          <div className="font-display font-bold text-2xl">{planPct}%</div>
+                          <div className="text-xs uppercase tracking-wide text-muted-foreground">Avance general del plan</div>
+                          <div className="font-display font-bold text-3xl">{planPct}%</div>
+                          <div className="text-xs text-muted-foreground mt-0.5">
+                            {plan.items.filter((i) => i.status === "completado").length} de {plan.items.length} ítems
+                          </div>
                         </div>
                         <StatusBadge value={plan.status} />
                       </div>
-                      <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden">
-                        <div className="h-full bg-primary transition-all" style={{ width: `${planPct}%` }} />
+                      <div className="h-2.5 rounded-full bg-muted overflow-hidden">
+                        <div
+                          className={`h-full transition-all ${planPct >= 70 ? "bg-success" : planPct >= 40 ? "bg-warning" : "bg-danger"}`}
+                          style={{ width: `${planPct}%` }}
+                        />
                       </div>
                     </CardContent>
                   </Card>
-                  <div className="grid md:grid-cols-2 gap-4">
+
+                  <div className="space-y-3">
                     {quarters.map((q) => {
                       const items = planByQ(q);
                       const pct = items.length === 0 ? 0 : Math.round(items.filter((i) => i.status === "completado").length / items.length * 100);
+                      const tone = pct >= 70 ? "success" : pct >= 40 ? "warning" : "danger";
                       return (
-                        <Card key={q} className="bg-surface/60 border-border">
-                          <CardHeader className="pb-2">
-                            <div className="flex justify-between items-center">
-                              <CardTitle className="font-display text-sm">{q}</CardTitle>
-                              <span className="text-xs font-mono text-muted-foreground">{pct}%</span>
-                            </div>
-                            <div className="h-1.5 rounded-full bg-muted overflow-hidden mt-1">
-                              <div className={`h-full ${pct >= 70 ? "bg-success" : pct >= 40 ? "bg-warning" : "bg-danger"}`} style={{ width: `${pct}%` }} />
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-2">
-                            {items.length === 0 && <p className="text-xs text-muted-foreground">Sin ítems.</p>}
-                            {items.map((it) => (
-                              <div key={it.id} className="flex items-start gap-2 rounded-md border border-border/50 bg-background/30 p-2">
-                                <button
-                                  onClick={() => toggleTrainingItem(plan.id, it.id)}
-                                  className={`mt-0.5 h-4 w-4 rounded border ${it.status === "completado" ? "bg-success border-success" : "border-border"} flex items-center justify-center`}
-                                >
-                                  {it.status === "completado" && <Check className="h-3 w-3 text-white" />}
-                                </button>
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="text-sm font-medium">{it.title}</span>
-                                    {it.suggestedByAtlas && <span className="text-[10px] bg-primary/15 text-primary rounded px-1.5 py-0.5">Sugerido por ATLAS</span>}
+                        <Collapsible key={q} defaultOpen={items.length > 0}>
+                          <Card className="bg-surface/60 border-border">
+                            <CollapsibleTrigger className="w-full group">
+                              <CardHeader className="py-3">
+                                <div className="flex items-center gap-4">
+                                  <span className={`h-3 w-3 rounded-full bg-${tone} shadow-[0_0_10px_currentColor] text-${tone}`} />
+                                  <CardTitle className="font-display text-base flex-1 text-left">{q}</CardTitle>
+                                  <span className="text-xs text-muted-foreground">{items.filter((i) => i.status === "completado").length}/{items.length}</span>
+                                  <span className={`text-sm font-mono font-semibold text-${tone}`}>{pct}%</span>
+                                  <div className="w-32 h-1.5 rounded-full bg-muted overflow-hidden">
+                                    <div className={`h-full bg-${tone}`} style={{ width: `${pct}%` }} />
                                   </div>
-                                  <div className="text-xs text-muted-foreground">{it.platform} · {it.durationHours}h · {it.priority}</div>
-                                  {it.status === "en-curso" && <div className="mt-1 h-1 rounded bg-muted overflow-hidden"><div className="h-full bg-primary" style={{ width: `${it.progressPercent ?? 0}%` }} /></div>}
+                                  <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
                                 </div>
-                              </div>
-                            ))}
-                          </CardContent>
-                        </Card>
+                              </CardHeader>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent>
+                              <CardContent className="space-y-2 pt-0">
+                                {items.length === 0 && <p className="text-xs text-muted-foreground py-2">Sin ítems en este quarter.</p>}
+                                {items.map((it) => {
+                                  const comp = competencies.find((c) => c.id === it.competencyIds[0]);
+                                  const prioTone = it.priority === "Alta" ? "bg-danger/15 text-danger border-danger/30"
+                                    : it.priority === "Media" ? "bg-warning/15 text-warning border-warning/30"
+                                    : "bg-muted text-muted-foreground border-border";
+                                  return (
+                                    <div key={it.id} className="flex items-start gap-3 rounded-md border border-border/50 bg-background/30 p-3">
+                                      <button
+                                        onClick={() => toggleTrainingItem(plan.id, it.id)}
+                                        className={`mt-0.5 h-5 w-5 rounded border flex items-center justify-center transition-colors ${it.status === "completado" ? "bg-success border-success" : "border-border hover:border-primary"}`}
+                                        aria-label="Marcar como completado"
+                                      >
+                                        {it.status === "completado" && <Check className="h-3.5 w-3.5 text-white" />}
+                                      </button>
+                                      <div className="flex-1 min-w-0 space-y-1.5">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className={`text-sm font-medium ${it.status === "completado" ? "line-through text-muted-foreground" : ""}`}>{it.title}</span>
+                                          {it.suggestedByAtlas && (
+                                            <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/30">
+                                              <Sparkles className="h-2.5 w-2.5 mr-0.5" />Sugerido por ATLAS
+                                            </Badge>
+                                          )}
+                                          <Badge variant="outline" className={`text-[10px] ${prioTone}`}>{it.priority}</Badge>
+                                          <StatusBadge value={it.status} />
+                                        </div>
+                                        <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+                                          <span className="font-mono">{it.platform}</span>
+                                          <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" />{it.durationHours}h</span>
+                                          {comp && <span className="inline-flex items-center gap-1"><GraduationCap className="h-3 w-3" />{comp.name}</span>}
+                                          {it.url && (
+                                            <a href={it.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
+                                              <ExternalLink className="h-3 w-3" />Ir al curso
+                                            </a>
+                                          )}
+                                        </div>
+                                        {it.status === "en-curso" && (
+                                          <div className="mt-1 h-1 rounded bg-muted overflow-hidden">
+                                            <div className="h-full bg-primary transition-all" style={{ width: `${it.progressPercent ?? 0}%` }} />
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </CardContent>
+                            </CollapsibleContent>
+                          </Card>
+                        </Collapsible>
                       );
                     })}
                   </div>
