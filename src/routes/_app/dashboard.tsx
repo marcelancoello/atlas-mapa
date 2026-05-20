@@ -64,41 +64,42 @@ function Dashboard() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4">
-        <Card className="lg:col-span-2 bg-surface/60 border-border">
-          <CardHeader><CardTitle className="font-display">Top 5 competencias con mayor gap</CardTitle></CardHeader>
+        <Card className="bg-surface/60 border-border">
+          <CardHeader><CardTitle className="font-display text-sm">Promedio por dominio</CardTitle></CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={topGaps} layout="vertical" margin={{ left: 8, right: 16 }}>
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={domainData} layout="vertical" margin={{ left: 8, right: 24 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                <XAxis type="number" stroke="var(--color-muted-foreground)" />
-                <YAxis dataKey="name" type="category" width={200} stroke="var(--color-muted-foreground)" tick={{ fontSize: 11 }} />
+                <XAxis type="number" domain={[0, 4]} stroke="var(--color-muted-foreground)" />
+                <YAxis dataKey="name" type="category" width={90} stroke="var(--color-muted-foreground)" tick={{ fontSize: 12 }} />
                 <Tooltip contentStyle={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: 8 }} />
-                <Bar dataKey="gap" radius={[0, 6, 6, 0]}>
-                  {topGaps.map((g, i) => <Cell key={i} fill={g.gap >= 2.5 ? "var(--color-danger)" : g.gap >= 1.5 ? "var(--color-warning)" : "var(--color-primary)"} />)}
+                <Bar dataKey="score" radius={[0, 6, 6, 0]} label={{ position: "right", fill: "var(--color-muted-foreground)", fontSize: 11 }}>
+                  {domainData.map((d, i) => <Cell key={i} fill={d.name === "Soft" ? "var(--color-warning)" : "var(--color-primary)"} />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
-          <Card className="bg-surface/60 border-border">
-            <CardHeader><CardTitle className="font-display text-sm">Promedio por dominio</CardTitle></CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={140}>
-                <BarChart data={domainData}>
-                  <XAxis dataKey="name" stroke="var(--color-muted-foreground)" />
-                  <YAxis domain={[0, 4]} hide />
-                  <Tooltip contentStyle={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: 8 }} />
-                  <Bar dataKey="score" fill="var(--color-primary)" radius={[6, 6, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-          <QuarterProgress quarter={quarter + " · Avance plan global"} percent={qPct} />
-          <div className="flex justify-center"><ReadinessGauge value={user.readinessScore ?? 7} /></div>
-        </div>
+        <Card className="bg-surface/60 border-border">
+          <CardHeader><CardTitle className="font-display text-sm">Top 5 competencias con mayor gap</CardTitle></CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={topGaps} margin={{ left: 0, right: 8, bottom: 40 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                <XAxis dataKey="name" stroke="var(--color-muted-foreground)" tick={{ fontSize: 10 }} interval={0} angle={-25} textAnchor="end" height={60} />
+                <YAxis domain={[0, 4]} stroke="var(--color-muted-foreground)" />
+                <Tooltip contentStyle={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: 8 }} />
+                <Bar dataKey="gap" fill="var(--color-danger)" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <QuarterSemaphoreCard quarter={quarter} percent={qPct} totalItems={allItems.length} completed={allItems.filter((i) => i.status === "completado").length} />
       </div>
+
+      <div className="flex justify-center"><ReadinessGauge value={user.readinessScore ?? 7} /></div>
 
       <Card className="bg-surface/60 border-border">
         <CardHeader><CardTitle className="font-display">Colaboradores con gaps críticos sin plan activo</CardTitle></CardHeader>
