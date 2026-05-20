@@ -194,19 +194,23 @@ function EmployeeDetail() {
                     {quarters.map((q) => {
                       const items = planByQ(q);
                       const pct = items.length === 0 ? 0 : Math.round(items.filter((i) => i.status === "completado").length / items.length * 100);
-                      const tone = pct >= 70 ? "success" : pct >= 40 ? "warning" : "danger";
+                      const tones = pct >= 70
+                        ? { dot: "bg-success", bar: "bg-success", text: "text-success" }
+                        : pct >= 40
+                        ? { dot: "bg-warning", bar: "bg-warning", text: "text-warning" }
+                        : { dot: "bg-danger", bar: "bg-danger", text: "text-danger" };
                       return (
                         <Collapsible key={q} defaultOpen={items.length > 0}>
                           <Card className="bg-surface/60 border-border">
                             <CollapsibleTrigger className="w-full group">
                               <CardHeader className="py-3">
                                 <div className="flex items-center gap-4">
-                                  <span className={`h-3 w-3 rounded-full bg-${tone} shadow-[0_0_10px_currentColor] text-${tone}`} />
+                                  <span className={`h-3 w-3 rounded-full ${tones.dot}`} />
                                   <CardTitle className="font-display text-base flex-1 text-left">{q}</CardTitle>
                                   <span className="text-xs text-muted-foreground">{items.filter((i) => i.status === "completado").length}/{items.length}</span>
-                                  <span className={`text-sm font-mono font-semibold text-${tone}`}>{pct}%</span>
-                                  <div className="w-32 h-1.5 rounded-full bg-muted overflow-hidden">
-                                    <div className={`h-full bg-${tone}`} style={{ width: `${pct}%` }} />
+                                  <span className={`text-sm font-mono font-semibold ${tones.text}`}>{pct}%</span>
+                                  <div className="w-32 h-1.5 rounded-full bg-muted overflow-hidden hidden sm:block">
+                                    <div className={`h-full ${tones.bar}`} style={{ width: `${pct}%` }} />
                                   </div>
                                   <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
                                 </div>
