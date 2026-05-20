@@ -164,3 +164,34 @@ function Kpi({ icon, label, value, danger }: { icon: React.ReactNode; label: str
     </Card>
   );
 }
+
+function QuarterSemaphoreCard({ quarter, percent, totalItems, completed }: { quarter: string; percent: number; totalItems: number; completed: number }) {
+  const tone = percent >= 70 ? { text: "text-success", bg: "bg-success", ring: "ring-success/40", label: "En track" }
+             : percent >= 40 ? { text: "text-warning", bg: "bg-warning", ring: "ring-warning/40", label: "Atención" }
+             : { text: "text-danger", bg: "bg-danger", ring: "ring-danger/40", label: "Crítico" };
+  return (
+    <Card className="bg-surface/60 border-border">
+      <CardHeader><CardTitle className="font-display text-sm">Avance plan global · {quarter}</CardTitle></CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex items-center gap-4">
+          <div className={cn("flex flex-col items-center justify-center gap-1 rounded-full p-2 ring-2", tone.ring)}>
+            <span className={cn("h-4 w-4 rounded-full", percent >= 70 ? "bg-success" : "bg-muted")} />
+            <span className={cn("h-4 w-4 rounded-full", percent >= 40 && percent < 70 ? "bg-warning" : "bg-muted")} />
+            <span className={cn("h-4 w-4 rounded-full", percent < 40 ? "bg-danger" : "bg-muted")} />
+          </div>
+          <div className="flex-1">
+            <div className={cn("font-display font-bold text-4xl", tone.text)}>{percent}%</div>
+            <div className={cn("text-xs uppercase tracking-wider font-medium", tone.text)}>{tone.label}</div>
+            <div className="text-xs text-muted-foreground mt-1">{completed} de {totalItems} ítems completados</div>
+          </div>
+        </div>
+        <div className="h-2 rounded-full bg-muted overflow-hidden">
+          <div className={cn("h-full rounded-full transition-all", tone.bg)} style={{ width: `${percent}%` }} />
+        </div>
+        <div className="flex justify-between text-[10px] text-muted-foreground font-mono">
+          <span>0%</span><span className="text-danger">40%</span><span className="text-warning">70%</span><span>100%</span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
