@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useAtlas, useCurrentUser, visibleEmployees } from "@/store/atlasStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ReadinessGauge, QuarterProgress, StatusBadge, UnitBadge, SeniorityBadge } from "@/components/atlas/AtlasUI";
+import { ReadinessGauge, StatusBadge, UnitBadge, SeniorityBadge } from "@/components/atlas/AtlasUI";
+import { cn } from "@/lib/utils";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell } from "recharts";
 import { Users, ClipboardCheck, GraduationCap, TrendingUp } from "lucide-react";
 import { PageHeader } from "@/components/atlas/PageHeader";
