@@ -9,38 +9,189 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppTransicionesRouteImport } from './routes/_app/transiciones'
+import { Route as AppPlanesRouteImport } from './routes/_app/planes'
+import { Route as AppMiPerfilRouteImport } from './routes/_app/mi-perfil'
+import { Route as AppMatrizRolesRouteImport } from './routes/_app/matriz-roles'
+import { Route as AppLdAdminRouteImport } from './routes/_app/ld-admin'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppCompetenciasRouteImport } from './routes/_app/competencias'
+import { Route as AppCatalogoRouteImport } from './routes/_app/catalogo'
+import { Route as AppAssessmentsRouteImport } from './routes/_app/assessments'
+import { Route as AppEmpleadosIndexRouteImport } from './routes/_app/empleados.index'
+import { Route as AppEmpleadosIdRouteImport } from './routes/_app/empleados.$id'
 
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppTransicionesRoute = AppTransicionesRouteImport.update({
+  id: '/transiciones',
+  path: '/transiciones',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlanesRoute = AppPlanesRouteImport.update({
+  id: '/planes',
+  path: '/planes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMiPerfilRoute = AppMiPerfilRouteImport.update({
+  id: '/mi-perfil',
+  path: '/mi-perfil',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMatrizRolesRoute = AppMatrizRolesRouteImport.update({
+  id: '/matriz-roles',
+  path: '/matriz-roles',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLdAdminRoute = AppLdAdminRouteImport.update({
+  id: '/ld-admin',
+  path: '/ld-admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCompetenciasRoute = AppCompetenciasRouteImport.update({
+  id: '/competencias',
+  path: '/competencias',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCatalogoRoute = AppCatalogoRouteImport.update({
+  id: '/catalogo',
+  path: '/catalogo',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAssessmentsRoute = AppAssessmentsRouteImport.update({
+  id: '/assessments',
+  path: '/assessments',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEmpleadosIndexRoute = AppEmpleadosIndexRouteImport.update({
+  id: '/empleados/',
+  path: '/empleados/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEmpleadosIdRoute = AppEmpleadosIdRouteImport.update({
+  id: '/empleados/$id',
+  path: '/empleados/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assessments': typeof AppAssessmentsRoute
+  '/catalogo': typeof AppCatalogoRoute
+  '/competencias': typeof AppCompetenciasRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/ld-admin': typeof AppLdAdminRoute
+  '/matriz-roles': typeof AppMatrizRolesRoute
+  '/mi-perfil': typeof AppMiPerfilRoute
+  '/planes': typeof AppPlanesRoute
+  '/transiciones': typeof AppTransicionesRoute
+  '/empleados/$id': typeof AppEmpleadosIdRoute
+  '/empleados/': typeof AppEmpleadosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assessments': typeof AppAssessmentsRoute
+  '/catalogo': typeof AppCatalogoRoute
+  '/competencias': typeof AppCompetenciasRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/ld-admin': typeof AppLdAdminRoute
+  '/matriz-roles': typeof AppMatrizRolesRoute
+  '/mi-perfil': typeof AppMiPerfilRoute
+  '/planes': typeof AppPlanesRoute
+  '/transiciones': typeof AppTransicionesRoute
+  '/empleados/$id': typeof AppEmpleadosIdRoute
+  '/empleados': typeof AppEmpleadosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/assessments': typeof AppAssessmentsRoute
+  '/_app/catalogo': typeof AppCatalogoRoute
+  '/_app/competencias': typeof AppCompetenciasRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/ld-admin': typeof AppLdAdminRoute
+  '/_app/matriz-roles': typeof AppMatrizRolesRoute
+  '/_app/mi-perfil': typeof AppMiPerfilRoute
+  '/_app/planes': typeof AppPlanesRoute
+  '/_app/transiciones': typeof AppTransicionesRoute
+  '/_app/empleados/$id': typeof AppEmpleadosIdRoute
+  '/_app/empleados/': typeof AppEmpleadosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/assessments'
+    | '/catalogo'
+    | '/competencias'
+    | '/dashboard'
+    | '/ld-admin'
+    | '/matriz-roles'
+    | '/mi-perfil'
+    | '/planes'
+    | '/transiciones'
+    | '/empleados/$id'
+    | '/empleados/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/assessments'
+    | '/catalogo'
+    | '/competencias'
+    | '/dashboard'
+    | '/ld-admin'
+    | '/matriz-roles'
+    | '/mi-perfil'
+    | '/planes'
+    | '/transiciones'
+    | '/empleados/$id'
+    | '/empleados'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/_app/assessments'
+    | '/_app/catalogo'
+    | '/_app/competencias'
+    | '/_app/dashboard'
+    | '/_app/ld-admin'
+    | '/_app/matriz-roles'
+    | '/_app/mi-perfil'
+    | '/_app/planes'
+    | '/_app/transiciones'
+    | '/_app/empleados/$id'
+    | '/_app/empleados/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +199,120 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/transiciones': {
+      id: '/_app/transiciones'
+      path: '/transiciones'
+      fullPath: '/transiciones'
+      preLoaderRoute: typeof AppTransicionesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/planes': {
+      id: '/_app/planes'
+      path: '/planes'
+      fullPath: '/planes'
+      preLoaderRoute: typeof AppPlanesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/mi-perfil': {
+      id: '/_app/mi-perfil'
+      path: '/mi-perfil'
+      fullPath: '/mi-perfil'
+      preLoaderRoute: typeof AppMiPerfilRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/matriz-roles': {
+      id: '/_app/matriz-roles'
+      path: '/matriz-roles'
+      fullPath: '/matriz-roles'
+      preLoaderRoute: typeof AppMatrizRolesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ld-admin': {
+      id: '/_app/ld-admin'
+      path: '/ld-admin'
+      fullPath: '/ld-admin'
+      preLoaderRoute: typeof AppLdAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/competencias': {
+      id: '/_app/competencias'
+      path: '/competencias'
+      fullPath: '/competencias'
+      preLoaderRoute: typeof AppCompetenciasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/catalogo': {
+      id: '/_app/catalogo'
+      path: '/catalogo'
+      fullPath: '/catalogo'
+      preLoaderRoute: typeof AppCatalogoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/assessments': {
+      id: '/_app/assessments'
+      path: '/assessments'
+      fullPath: '/assessments'
+      preLoaderRoute: typeof AppAssessmentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/empleados/': {
+      id: '/_app/empleados/'
+      path: '/empleados'
+      fullPath: '/empleados/'
+      preLoaderRoute: typeof AppEmpleadosIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/empleados/$id': {
+      id: '/_app/empleados/$id'
+      path: '/empleados/$id'
+      fullPath: '/empleados/$id'
+      preLoaderRoute: typeof AppEmpleadosIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAssessmentsRoute: typeof AppAssessmentsRoute
+  AppCatalogoRoute: typeof AppCatalogoRoute
+  AppCompetenciasRoute: typeof AppCompetenciasRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppLdAdminRoute: typeof AppLdAdminRoute
+  AppMatrizRolesRoute: typeof AppMatrizRolesRoute
+  AppMiPerfilRoute: typeof AppMiPerfilRoute
+  AppPlanesRoute: typeof AppPlanesRoute
+  AppTransicionesRoute: typeof AppTransicionesRoute
+  AppEmpleadosIdRoute: typeof AppEmpleadosIdRoute
+  AppEmpleadosIndexRoute: typeof AppEmpleadosIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAssessmentsRoute: AppAssessmentsRoute,
+  AppCatalogoRoute: AppCatalogoRoute,
+  AppCompetenciasRoute: AppCompetenciasRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppLdAdminRoute: AppLdAdminRoute,
+  AppMatrizRolesRoute: AppMatrizRolesRoute,
+  AppMiPerfilRoute: AppMiPerfilRoute,
+  AppPlanesRoute: AppPlanesRoute,
+  AppTransicionesRoute: AppTransicionesRoute,
+  AppEmpleadosIdRoute: AppEmpleadosIdRoute,
+  AppEmpleadosIndexRoute: AppEmpleadosIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
