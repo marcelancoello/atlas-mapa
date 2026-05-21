@@ -401,3 +401,6 @@ function Info({ label, value }: { label: string; value: string }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return <div className="mb-4"><h4 className="font-display font-semibold text-sm uppercase tracking-wide text-primary mb-2">{title}</h4>{children}</div>;
 }
+function CvSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return <div className="mb-4"><h4 className="font-display font-semibold text-xs uppercase tracking-wider text-blue-700 mb-1.5">{title}</h4>{children}</div>;
+}
