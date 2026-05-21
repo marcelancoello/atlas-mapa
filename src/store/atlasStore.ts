@@ -147,6 +147,7 @@ export const useAtlas = create<AtlasState>()(
         cvs: s.cvs,
         notifications: s.notifications,
         employees: s.employees,
+        transitions: s.transitions,
       }),
     },
   ),
