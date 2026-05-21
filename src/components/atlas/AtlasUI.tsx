@@ -75,6 +75,11 @@ export function StatusBadge({ value }: { value: string }) {
     "onboarding": "bg-primary/15 text-primary",
     "in-review": "bg-warning/15 text-warning",
     "promoted": "bg-violet-500/15 text-violet-300",
+    "requisitos": "bg-sky-500/15 text-sky-300 border-sky-500/30",
+    "evaluacion": "bg-primary/15 text-primary",
+    "revision-ld": "bg-warning/15 text-warning",
+    "aprobacion-manager": "bg-warning/15 text-warning",
+    "excepcion-ceo": "bg-orange-500/20 text-orange-400 border-orange-500/40",
   };
   return (
     <span className={cn("inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium border border-border/50", map[value] ?? "bg-muted text-muted-foreground")}>
