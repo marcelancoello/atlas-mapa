@@ -113,6 +113,19 @@ export const transitions: SeniorityTransition[] = [
     dictamen: "en-camino",
     executiveSummary: "Valentina demuestra liderazgo técnico sólido, con oportunidades en scope estratégico.",
   },
+  {
+    id: "t-2", employeeId: "u-4", fromSeniority: "Semi-Senior", toSeniority: "Senior",
+    initiatedBy: "u-3", initiatedByRole: "leader", date: daysAgo(2),
+    stage: "requisitos", requiresCeoException: false,
+    readinessPercentage: 0,
+    dimensionScores: {
+      "Autonomía": "en-desarrollo", "Scope de impacto": "en-desarrollo",
+      "Mentoring": "no-evidenciada", "Ownership": "en-desarrollo",
+      "Comunicación con stakeholders": "en-desarrollo",
+    },
+    requirementsFulfilled: { "Diseño de feature completa": false, "Documentación técnica de un componente clave": false },
+    executiveSummary: "Pendiente validación de requisitos excluyentes por parte del líder.",
+  },
 ];
 
 const cvFor = (emp: Employee): EmployeeCV => ({
