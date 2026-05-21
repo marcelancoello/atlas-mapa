@@ -10,6 +10,7 @@ import { Calendar, FileDown, GraduationCap, ChevronLeft, Check, ClipboardEdit, C
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { exportCVtoPDF, exportCVtoDOCX } from "@/lib/cvExport";
 
 export const Route = createFileRoute("/_app/empleados/$id")({
   component: EmployeeDetail,
@@ -314,68 +315,77 @@ function EmployeeDetail() {
 
             <TabsContent value="cv">
               {cv && (
-                <Card className="bg-surface/60 border-border">
-                  <CardContent className="p-5 space-y-4">
-                    <div className="flex flex-wrap gap-4 items-center">
-                      <label className="text-sm">Nivel de inglés:
+                <div className="grid lg:grid-cols-[320px_1fr] gap-4">
+                  <Card className="bg-surface/60 border-border h-fit">
+                    <CardHeader><CardTitle className="font-display text-base">Opciones del CV</CardTitle></CardHeader>
+                    <CardContent className="space-y-4">
+                      <label className="block text-sm">
+                        <span className="text-xs uppercase text-muted-foreground">Nivel de inglés</span>
                         <select value={cv.englishLevel} onChange={(e) => updateCV(emp.id, { englishLevel: e.target.value as typeof cv.englishLevel })}
-                          className="ml-2 h-8 rounded-md border border-border bg-background px-2 text-sm">
+                          className="mt-1 w-full h-9 rounded-md border border-border bg-background px-2 text-sm">
                           {["Básico", "Intermedio", "Avanzado", "Bilingüe"].map((l) => <option key={l}>{l}</option>)}
                         </select>
                       </label>
-                    </div>
-                    <div className="grid sm:grid-cols-3 gap-2 text-sm">
-                      <label className="flex items-center gap-2"><input type="checkbox" checked={cv.anonymous} onChange={(e) => updateCV(emp.id, { anonymous: e.target.checked })} />CV anónimo</label>
-                      <label className="flex items-center gap-2"><input type="checkbox" checked={cv.includeCompetencies} onChange={(e) => updateCV(emp.id, { includeCompetencies: e.target.checked })} />Incluir competencias</label>
-                      <label className="flex items-center gap-2"><input type="checkbox" checked={cv.includeTrainings} onChange={(e) => updateCV(emp.id, { includeTrainings: e.target.checked })} />Incluir formaciones</label>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-background/60 p-5">
-                      <div className="border-b border-border pb-3 mb-3">
-                        <h3 className="font-display text-xl font-bold">{cv.anonymous ? "Candidato Confidencial" : emp.name}</h3>
-                        <p className="text-sm text-muted-foreground">{emp.role} · Inglés {cv.englishLevel}</p>
+                      <div className="space-y-2 text-sm">
+                        <label className="flex items-center gap-2"><input type="checkbox" checked={cv.anonymous} onChange={(e) => updateCV(emp.id, { anonymous: e.target.checked })} />CV anónimo</label>
+                        <label className="flex items-center gap-2"><input type="checkbox" checked={cv.includeCompetencies} onChange={(e) => updateCV(emp.id, { includeCompetencies: e.target.checked })} />Incluir competencias (solo nombres)</label>
+                        <label className="flex items-center gap-2"><input type="checkbox" checked={cv.includeTrainings} onChange={(e) => updateCV(emp.id, { includeTrainings: e.target.checked })} />Incluir formaciones completadas</label>
                       </div>
-                      <Section title="Experiencia">
+                      <div className="flex flex-col gap-2 pt-2 border-t border-border">
+                        <Button variant="outline" onClick={() => { exportCVtoPDF({ emp, cv, plan, competencies }); toast.success("CV exportado a PDF"); }}>
+                          <FileDown className="h-4 w-4 mr-1" />Exportar PDF
+                        </Button>
+                        <Button variant="outline" onClick={async () => { await exportCVtoDOCX({ emp, cv, plan, competencies }); toast.success("CV exportado a Word"); }}>
+                          <FileDown className="h-4 w-4 mr-1" />Exportar Word
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-white text-slate-900 border-border">
+                    <CardContent className="p-8">
+                      <div className="border-b border-slate-200 pb-3 mb-4">
+                        <h3 className="font-display text-2xl font-bold">{cv.anonymous ? "Colaborador" : emp.name}</h3>
+                        <p className="text-sm text-slate-600">{emp.role} · {emp.seniority} · Inglés {cv.englishLevel}</p>
+                      </div>
+                      <CvSection title="Experiencia">
                         {cv.experience.filter((x) => x.includeInCV).map((x, i) => (
-                          <div key={i} className="mb-2">
-                            <div className="text-sm font-medium">{x.role} · {x.company}</div>
-                            <div className="text-xs text-muted-foreground">{x.from} — {x.to ?? "Actualidad"}</div>
-                            <p className="text-sm">{x.description}</p>
+                          <div key={i} className="mb-3">
+                            <div className="text-sm font-semibold">{x.role} · {x.company}</div>
+                            <div className="text-xs text-slate-500">{x.from} — {x.to ?? "Actualidad"}</div>
+                            <p className="text-sm mt-0.5">{x.description}</p>
                           </div>
                         ))}
-                      </Section>
-                      <Section title="Educación">
+                      </CvSection>
+                      <CvSection title="Educación">
                         {cv.education.filter((x) => x.includeInCV).map((x, i) => (
                           <div key={i} className="text-sm">{x.degree} · {x.institution} ({x.year})</div>
                         ))}
-                      </Section>
-                      <Section title="Certificaciones">
+                      </CvSection>
+                      <CvSection title="Certificaciones">
                         {cv.certifications.filter((x) => x.includeInCV).map((x, i) => (
                           <div key={i} className="text-sm">{x.name} · {x.issuer} ({x.year})</div>
                         ))}
-                      </Section>
+                      </CvSection>
                       {cv.includeCompetencies && (
-                        <Section title="Competencias">
+                        <CvSection title="Competencias">
                           <div className="flex flex-wrap gap-1">
-                            {competencies.slice(0, 12).map((c) => <span key={c.id} className="rounded bg-accent/40 px-1.5 py-0.5 text-[10px]">{c.name}</span>)}
+                            {competencies.slice(0, 24).map((c) => <span key={c.id} className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px]">{c.name}</span>)}
                           </div>
-                        </Section>
+                        </CvSection>
                       )}
                       {cv.includeTrainings && plan && (
-                        <Section title="Formaciones completadas">
-                          {plan.items.filter((i) => i.status === "completado").map((i) => (
-                            <div key={i.id} className="text-sm">• {i.title} ({i.platform})</div>
-                          ))}
-                        </Section>
+                        <CvSection title="Formaciones completadas">
+                          {plan.items.filter((i) => i.status === "completado").length === 0
+                            ? <div className="text-xs text-slate-500">Sin formaciones completadas.</div>
+                            : plan.items.filter((i) => i.status === "completado").map((i) => (
+                              <div key={i.id} className="text-sm">• {i.title} ({i.platform})</div>
+                            ))}
+                        </CvSection>
                       )}
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button variant="outline" onClick={() => toast.success("Exportación PDF simulada")}><FileDown className="h-4 w-4 mr-1" />PDF</Button>
-                      <Button variant="outline" onClick={() => toast.success("Exportación DOCX simulada")}><FileDown className="h-4 w-4 mr-1" />Word</Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               )}
             </TabsContent>
           </Tabs>
@@ -390,4 +400,7 @@ function Info({ label, value }: { label: string; value: string }) {
 }
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return <div className="mb-4"><h4 className="font-display font-semibold text-sm uppercase tracking-wide text-primary mb-2">{title}</h4>{children}</div>;
+}
+function CvSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return <div className="mb-4"><h4 className="font-display font-semibold text-xs uppercase tracking-wider text-blue-700 mb-1.5">{title}</h4>{children}</div>;
 }
