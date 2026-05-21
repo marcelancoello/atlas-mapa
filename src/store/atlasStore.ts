@@ -116,6 +116,27 @@ export const useAtlas = create<AtlasState>()(
           }),
         }),
       addEmployee: (e) => set({ employees: [...get().employees, e] }),
+      setTransitionRequirement: (transitionId, key, value) =>
+        set({
+          transitions: get().transitions.map((t) => t.id !== transitionId ? t : {
+            ...t,
+            requirementsFulfilled: { ...t.requirementsFulfilled, [key]: value },
+          }),
+        }),
+      advanceTransitionStage: (transitionId) =>
+        set({
+          transitions: get().transitions.map((t) => {
+            if (t.id !== transitionId) return t;
+            const next = NEXT_STAGE[t.stage] ?? t.stage;
+            return { ...t, stage: next };
+          }),
+        }),
+      requestCeoException: (transitionId) =>
+        set({
+          transitions: get().transitions.map((t) => t.id !== transitionId ? t : {
+            ...t, stage: "excepcion-ceo", requiresCeoException: true,
+          }),
+        }),
     }),
     {
       name: "atlas-state-v1",
