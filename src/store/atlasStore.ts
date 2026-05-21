@@ -38,7 +38,22 @@ interface AtlasState {
   updateCV: (employeeId: string, patch: Partial<EmployeeCV>) => void;
   toggleTrainingItem: (planId: string, itemId: string) => void;
   addEmployee: (e: Employee) => void;
+  setTransitionRequirement: (transitionId: string, key: string, value: boolean) => void;
+  advanceTransitionStage: (transitionId: string) => void;
+  requestCeoException: (transitionId: string) => void;
+  ignoreMe?: never;
 }
+
+// helper to compute next stage in normal flow
+const NEXT_STAGE: Record<string, SeniorityTransition["stage"]> = {
+  "requisitos": "evaluacion",
+  "evaluacion": "revision-ld",
+  "revision-ld": "aprobacion-manager",
+  "aprobacion-manager": "aprobado",
+  "excepcion-ceo": "evaluacion",
+};
+
+interface _Unused {
 
 export const useAtlas = create<AtlasState>()(
   persist(
