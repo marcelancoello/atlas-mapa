@@ -38,7 +38,20 @@ interface AtlasState {
   updateCV: (employeeId: string, patch: Partial<EmployeeCV>) => void;
   toggleTrainingItem: (planId: string, itemId: string) => void;
   addEmployee: (e: Employee) => void;
+  setTransitionRequirement: (transitionId: string, key: string, value: boolean) => void;
+  advanceTransitionStage: (transitionId: string) => void;
+  requestCeoException: (transitionId: string) => void;
 }
+
+// helper to compute next stage in normal flow
+const NEXT_STAGE: Record<string, SeniorityTransition["stage"]> = {
+  "requisitos": "evaluacion",
+  "evaluacion": "revision-ld",
+  "revision-ld": "aprobacion-manager",
+  "aprobacion-manager": "aprobado",
+  "excepcion-ceo": "evaluacion",
+};
+
 
 export const useAtlas = create<AtlasState>()(
   persist(
@@ -103,9 +116,30 @@ export const useAtlas = create<AtlasState>()(
           }),
         }),
       addEmployee: (e) => set({ employees: [...get().employees, e] }),
+      setTransitionRequirement: (transitionId, key, value) =>
+        set({
+          transitions: get().transitions.map((t) => t.id !== transitionId ? t : {
+            ...t,
+            requirementsFulfilled: { ...t.requirementsFulfilled, [key]: value },
+          }),
+        }),
+      advanceTransitionStage: (transitionId) =>
+        set({
+          transitions: get().transitions.map((t) => {
+            if (t.id !== transitionId) return t;
+            const next = NEXT_STAGE[t.stage] ?? t.stage;
+            return { ...t, stage: next };
+          }),
+        }),
+      requestCeoException: (transitionId) =>
+        set({
+          transitions: get().transitions.map((t) => t.id !== transitionId ? t : {
+            ...t, stage: "excepcion-ceo", requiresCeoException: true,
+          }),
+        }),
     }),
     {
-      name: "atlas-state-v1",
+      name: "atlas-state-v2",
       partialize: (s) => ({
         currentUserId: s.currentUserId,
         plans: s.plans,
@@ -113,6 +147,7 @@ export const useAtlas = create<AtlasState>()(
         cvs: s.cvs,
         notifications: s.notifications,
         employees: s.employees,
+        transitions: s.transitions,
       }),
     },
   ),
