@@ -74,6 +74,27 @@ export const useAtlas = create<AtlasState>()(
       competencies: seedComps,
       courses: seedCourses,
       transitionRequirements: seedTR,
+      successionPlans: seedSuccession,
+      createSuccessionPlan: (p) => set({
+        successionPlans: [...get().successionPlans, {
+          ...p, id: `sp-${Date.now()}`, updatedAt: new Date().toISOString(),
+          successorCandidates: p.successorCandidates ?? [],
+        }],
+      }),
+      addSuccessionCandidate: (planId, c) => set({
+        successionPlans: get().successionPlans.map((sp) => sp.id !== planId ? sp : {
+          ...sp,
+          successorCandidates: [...sp.successorCandidates.filter((x) => x.employeeId !== c.employeeId), c],
+          updatedAt: new Date().toISOString(),
+        }),
+      }),
+      removeSuccessionCandidate: (planId, employeeId) => set({
+        successionPlans: get().successionPlans.map((sp) => sp.id !== planId ? sp : {
+          ...sp,
+          successorCandidates: sp.successorCandidates.filter((x) => x.employeeId !== employeeId),
+          updatedAt: new Date().toISOString(),
+        }),
+      }),
 
       markNotificationRead: (id) =>
         set({ notifications: get().notifications.map((n) => n.id === id ? { ...n, read: true } : n) }),
