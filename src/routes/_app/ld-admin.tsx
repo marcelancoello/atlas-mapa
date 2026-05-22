@@ -165,6 +165,12 @@ function LdAdmin() {
       </div>
 
       <Button onClick={() => toast.success("Exportación .xlsx simulada")}>Exportar datos (.xlsx)</Button>
+        </TabsContent>
+        <TabsContent value="sucesion" className="mt-4">
+          <SuccessionPanel />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
+
