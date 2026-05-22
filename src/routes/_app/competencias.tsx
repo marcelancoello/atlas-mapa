@@ -81,18 +81,48 @@ function Competencias() {
             <div className="flex flex-wrap items-end gap-2">
               <div className="flex-1 min-w-[220px]">
                 <label className="text-xs text-muted-foreground">Competencia</label>
-                <select
-                  value={pickerId}
-                  onChange={(e) => setPickerId(e.target.value)}
-                  className="mt-1 h-9 w-full rounded-md border border-border bg-surface px-3 text-sm"
-                >
-                  <option value="">Seleccionar…</option>
-                  {competencies
-                    .filter((c) => !criteria.some((cr) => cr.competencyId === c.id))
-                    .map((c) => (
-                      <option key={c.id} value={c.id}>{c.domain} · {c.name}</option>
-                    ))}
-                </select>
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={open}
+                      className="mt-1 w-full justify-between h-9 px-3 font-normal text-sm"
+                    >
+                      {pickerComp ? `${pickerComp.domain} · ${pickerComp.name}` : "Seleccionar…"}
+                      <ChevronsUpDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[320px] p-0" align="start">
+                    <Command>
+                      <CommandInput placeholder="Buscar competencia…" />
+                      <CommandList>
+                        <CommandEmpty>No se encontraron competencias.</CommandEmpty>
+                        <CommandGroup>
+                          {availableComps.map((c) => (
+                            <CommandItem
+                              key={c.id}
+                              value={`${c.domain} ${c.name} ${c.stack ?? ""}`}
+                              onSelect={() => {
+                                setPickerId(c.id);
+                                setOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  pickerId === c.id ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              <span className="text-xs text-muted-foreground mr-1.5">{c.domain}</span>
+                              <span>{c.name}</span>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
               <div>
                 <label className="text-xs text-muted-foreground">Nivel mínimo</label>
