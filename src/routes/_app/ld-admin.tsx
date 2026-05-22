@@ -54,6 +54,14 @@ function LdAdmin() {
     <div className="p-6 lg:p-8 space-y-6">
       <PageHeader title="L&D Admin" subtitle="Panel de aprobaciones y reportes globales" />
 
+      <Tabs defaultValue="panel">
+        <TabsList className="bg-surface/60 border border-border">
+          <TabsTrigger value="panel">Panel</TabsTrigger>
+          <TabsTrigger value="sucesion">Sucesión</TabsTrigger>
+        </TabsList>
+        <TabsContent value="panel" className="space-y-6 mt-4">
+
+
       <Card className="bg-surface/60 border-border">
         <CardHeader><CardTitle className="font-display">Planes pendientes ({pendingPlans.length})</CardTitle></CardHeader>
         <CardContent className="space-y-2">
