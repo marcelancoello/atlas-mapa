@@ -2,13 +2,13 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
   Employee, Assessment, TrainingPlan, SeniorityTransition,
-  Notification, CourseRequest, EmployeeCV, UserRole,
+  Notification, CourseRequest, EmployeeCV, UserRole, SuccessionPlan, SuccessionCandidate,
 } from "@/types";
 import {
   employees as seedEmployees, assessments as seedAssessments,
   plans as seedPlans, transitions as seedTransitions,
   notifications as seedNotifications, courseRequests as seedRequests,
-  cvs as seedCvs, transitionRequirements as seedTR,
+  cvs as seedCvs, transitionRequirements as seedTR, successionPlans as seedSuccession,
 } from "@/data/mockData";
 import { competencies as seedComps } from "@/data/seedCompetencies";
 import { courses as seedCourses } from "@/data/seedCourses";
