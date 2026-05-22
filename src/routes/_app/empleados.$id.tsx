@@ -295,7 +295,7 @@ function EmployeeDetail() {
               )}
             </TabsContent>
 
-            <TabsContent value="trans">
+            <TabsContent value="trans" className="space-y-4">
               {empTransitions.length === 0 ? <EmptyState icon={Calendar} title="Sin transiciones" message="No hay transiciones registradas para este colaborador." /> :
                 empTransitions.map((t) => (
                   <Card key={t.id} className="bg-surface/60 border-border">
@@ -311,7 +311,34 @@ function EmployeeDetail() {
                     </CardContent>
                   </Card>
                 ))}
+              {currentUser?.appRole === "ld_admin" && (() => {
+                const inPlans = successionPlans.filter((sp) => sp.successorCandidates.some((c) => c.employeeId === emp.id));
+                if (inPlans.length === 0) return null;
+                return (
+                  <Card className="bg-surface/60 border-border">
+                    <CardHeader><CardTitle className="font-display text-base">Planes de sucesión</CardTitle></CardHeader>
+                    <CardContent className="space-y-2">
+                      {inPlans.map((sp) => {
+                        const c = sp.successorCandidates.find((x) => x.employeeId === emp.id)!;
+                        const tone = c.readinessLevel === "Listo ahora" ? "bg-success/15 text-success border-success/30"
+                          : c.readinessLevel === "Listo en 1 año" ? "bg-primary/15 text-primary border-primary/30"
+                          : "bg-warning/15 text-warning border-warning/30";
+                        return (
+                          <div key={sp.id} className="flex items-center justify-between gap-2 rounded-md border border-border bg-background/40 p-3 flex-wrap">
+                            <div>
+                              <div className="text-sm font-medium">{sp.targetRoleName}</div>
+                              <div className="text-xs text-muted-foreground">Readiness {c.readinessPercentage}%</div>
+                            </div>
+                            <Badge variant="outline" className={tone}>{c.readinessLevel}</Badge>
+                          </div>
+                        );
+                      })}
+                    </CardContent>
+                  </Card>
+                );
+              })()}
             </TabsContent>
+
 
             <TabsContent value="cv">
               {cv && (
