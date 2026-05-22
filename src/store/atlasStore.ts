@@ -173,6 +173,7 @@ export const useAtlas = create<AtlasState>()(
         notifications: s.notifications,
         employees: s.employees,
         transitions: s.transitions,
+        successionPlans: s.successionPlans,
       }),
     },
   ),
