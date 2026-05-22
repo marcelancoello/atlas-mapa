@@ -1,9 +1,11 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useAtlas, useCurrentUser } from "@/store/atlasStore";
 import { PageHeader } from "@/components/atlas/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusBadge } from "@/components/atlas/AtlasUI";
+import { SuccessionPanel } from "@/components/atlas/SuccessionPanel";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, AreaChart, Area, CartesianGrid, Cell } from "recharts";
 import { toast } from "sonner";
 
@@ -51,6 +53,14 @@ function LdAdmin() {
   return (
     <div className="p-6 lg:p-8 space-y-6">
       <PageHeader title="L&D Admin" subtitle="Panel de aprobaciones y reportes globales" />
+
+      <Tabs defaultValue="panel">
+        <TabsList className="bg-surface/60 border border-border">
+          <TabsTrigger value="panel">Panel</TabsTrigger>
+          <TabsTrigger value="sucesion">Sucesión</TabsTrigger>
+        </TabsList>
+        <TabsContent value="panel" className="space-y-6 mt-4">
+
 
       <Card className="bg-surface/60 border-border">
         <CardHeader><CardTitle className="font-display">Planes pendientes ({pendingPlans.length})</CardTitle></CardHeader>
@@ -155,6 +165,12 @@ function LdAdmin() {
       </div>
 
       <Button onClick={() => toast.success("Exportación .xlsx simulada")}>Exportar datos (.xlsx)</Button>
+        </TabsContent>
+        <TabsContent value="sucesion" className="mt-4">
+          <SuccessionPanel />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
+

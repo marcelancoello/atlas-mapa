@@ -161,6 +161,28 @@ export interface CVCertification {
   name: string; issuer: string; year: string;
   expiresAt?: string; includeInCV: boolean;
 }
+export type SuccessionReadiness = "Listo ahora" | "Listo en 1 año" | "Listo en 2-3 años";
+
+export interface SuccessionCandidate {
+  employeeId: string;
+  readinessLevel: SuccessionReadiness;
+  readinessPercentage: number;
+  strengths: string[];
+  developmentAreas: string[];
+  hasDevelopmentPlan: boolean;
+}
+
+export interface SuccessionPlan {
+  id: string;
+  targetRoleId: string;
+  targetRoleName: string;
+  currentHolderId?: string;
+  successorCandidates: SuccessionCandidate[];
+  notes?: string;
+  updatedAt: string;
+  updatedBy: string;
+}
+
 export interface EmployeeCV {
   employeeId: string;
   englishLevel: "Básico" | "Intermedio" | "Avanzado" | "Bilingüe";

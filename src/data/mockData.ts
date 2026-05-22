@@ -1,7 +1,7 @@
 import type {
   Employee, Assessment, TrainingPlan, SeniorityTransition,
   CompetencyAssessment, TrainingItem, EmployeeCV, Quarter, Seniority,
-  Notification, CourseRequest,
+  Notification, CourseRequest, SuccessionPlan,
 } from "@/types";
 import { competencies } from "./seedCompetencies";
 
@@ -160,4 +160,29 @@ export const transitionRequirements = [
   { id: "tr-2", fromSeniority: "Semi-Senior" as Seniority, toSeniority: "Senior" as Seniority,
     mandatoryItems: ["Diseño de feature completa", "Documentación técnica de un componente clave"],
     recommendedItems: ["Mentoring informal", "Refactor mayor con impacto"] },
+];
+
+export const successionPlans: SuccessionPlan[] = [
+  {
+    id: "sp-1", targetRoleId: "role-tl-devops", targetRoleName: "Tech Lead DevOps",
+    currentHolderId: "u-2",
+    successorCandidates: [
+      { employeeId: "u-3", readinessLevel: "Listo en 1 año", readinessPercentage: 78,
+        strengths: ["Fuerte ownership", "Buen comunicador"], developmentAreas: ["Scope estratégico", "Gestión de stakeholders"], hasDevelopmentPlan: true },
+      { employeeId: "u-7", readinessLevel: "Listo en 2-3 años", readinessPercentage: 55,
+        strengths: ["Sólido en datos"], developmentAreas: ["Liderazgo técnico", "Mentoring"], hasDevelopmentPlan: false },
+    ],
+    notes: "Rol crítico para la unidad de negocio.",
+    updatedAt: daysAgo(5), updatedBy: "Ana Pérez",
+  },
+  {
+    id: "sp-2", targetRoleId: "role-lead-fe", targetRoleName: "Líder Frontend",
+    currentHolderId: undefined,
+    successorCandidates: [
+      { employeeId: "u-3", readinessLevel: "Listo ahora", readinessPercentage: 90,
+        strengths: ["Experiencia React sólida", "Mentor natural"], developmentAreas: ["Roadmapping"], hasDevelopmentPlan: true },
+    ],
+    notes: "Vacante a cubrir en próximos 6 meses.",
+    updatedAt: daysAgo(2), updatedBy: "Ana Pérez",
+  },
 ];
