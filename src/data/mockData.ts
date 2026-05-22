@@ -1,7 +1,7 @@
 import type {
   Employee, Assessment, TrainingPlan, SeniorityTransition,
   CompetencyAssessment, TrainingItem, EmployeeCV, Quarter, Seniority,
-  Notification, CourseRequest,
+  Notification, CourseRequest, EmployeeCV, Quarter, Seniority, SuccessionPlan,
 } from "@/types";
 import { competencies } from "./seedCompetencies";
 
