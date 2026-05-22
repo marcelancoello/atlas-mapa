@@ -35,6 +35,11 @@ function Competencias() {
   const [mode, setMode] = useState<"AND" | "OR">("AND");
   const [pickerId, setPickerId] = useState<string>("");
   const [pickerLevel, setPickerLevel] = useState<number>(3);
+  const [open, setOpen] = useState(false);
+
+  const pickerComp = competencies.find((c) => c.id === pickerId);
+
+  const availableComps = competencies.filter((c) => !criteria.some((cr) => cr.competencyId === c.id));
 
   const addCriterion = () => {
     if (!pickerId) return;
