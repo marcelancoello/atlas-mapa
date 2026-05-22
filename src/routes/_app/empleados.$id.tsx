@@ -20,7 +20,7 @@ function EmployeeDetail() {
   const { id } = Route.useParams();
   const currentUser = useCurrentUser();
   const isOwner = currentUser?.id === id;
-  const { employees, assessments, plans, transitions, competencies, cvs, updateCV, toggleTrainingItem } = useAtlas();
+  const { employees, assessments, plans, transitions, competencies, cvs, updateCV, toggleTrainingItem, successionPlans } = useAtlas();
   const emp = employees.find((e) => e.id === id);
   if (!emp) return <div className="p-8"><Link to="/empleados" className="text-primary text-sm">← Volver</Link><p className="mt-4">No encontrado.</p></div>;
 
