@@ -28,6 +28,10 @@ interface AtlasState {
   competencies: typeof seedComps;
   courses: typeof seedCourses;
   transitionRequirements: typeof seedTR;
+  successionPlans: SuccessionPlan[];
+  createSuccessionPlan: (p: Omit<SuccessionPlan, "id" | "updatedAt" | "successorCandidates"> & { successorCandidates?: SuccessionCandidate[] }) => void;
+  addSuccessionCandidate: (planId: string, c: SuccessionCandidate) => void;
+  removeSuccessionCandidate: (planId: string, employeeId: string) => void;
 
   markNotificationRead: (id: string) => void;
   markAllRead: (userId: string) => void;
