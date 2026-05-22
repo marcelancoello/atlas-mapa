@@ -5,9 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { CompetencyLevelDots, SeniorityBadge, EmptyState } from "@/components/atlas/AtlasUI";
 import { useMemo, useState } from "react";
-import { Search, X, Plus, Users } from "lucide-react";
+import { Search, X, Plus, Users, Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/competencias")({
   component: Competencias,
