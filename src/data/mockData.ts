@@ -186,4 +186,21 @@ export const successionPlans: SuccessionPlan[] = [
     notes: "Vacante a cubrir en próximos 6 meses.",
     updatedAt: daysAgo(2), updatedBy: "Ana Pérez",
   },
+  {
+    id: "sp-3", targetRoleId: "role-backend-eng", targetRoleName: "Backend Engineer (Java/SQL)",
+    currentHolderId: "u-4",
+    successorCandidates: [
+      { employeeId: "u-7", readinessLevel: "Listo ahora", readinessPercentage: 85,
+        strengths: ["Dominio de SQL", "Buen manejo de Java", "Autonomía técnica"],
+        developmentAreas: ["Diseño de APIs REST", "Testing automatizado"], hasDevelopmentPlan: true },
+      { employeeId: "u-5", readinessLevel: "Listo en 1 año", readinessPercentage: 65,
+        strengths: ["Sólida base de programación", "Curiosidad técnica"],
+        developmentAreas: ["Profundizar en Java backend", "Performance tuning de queries"], hasDevelopmentPlan: true },
+      { employeeId: "u-6", readinessLevel: "Listo en 2-3 años", readinessPercentage: 45,
+        strengths: ["Buena actitud de aprendizaje"],
+        developmentAreas: ["Experiencia en proyectos backend", "Java intermedio/avanzado"], hasDevelopmentPlan: false },
+    ],
+    notes: "Plan de sucesión para el rol que ocupa Martina García. Sucesor principal: el candidato con mayor readiness (Listo ahora).",
+    updatedAt: daysAgo(1), updatedBy: "Ana Pérez",
+  },
 ];

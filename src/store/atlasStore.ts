@@ -164,7 +164,7 @@ export const useAtlas = create<AtlasState>()(
         }),
     }),
     {
-      name: "atlas-state-v3",
+      name: "atlas-state-v4",
       partialize: (s) => ({
         currentUserId: s.currentUserId,
         plans: s.plans,
