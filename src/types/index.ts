@@ -4,7 +4,7 @@ export type Seniority =
 export type Domain = "Técnica" | "Soft";
 export type CompetencyLevel = 0 | 1 | 2 | 3 | 4;
 export type Quarter = "Q1" | "Q2" | "Q3" | "Q4";
-export type UserRole = "employee" | "leader" | "manager" | "ld_admin";
+export type UserRole = "employee" | "leader" | "manager" | "ld_admin" | "super_admin";
 export type Unit = "negocio" | "soporte";
 
 export interface Competency {
