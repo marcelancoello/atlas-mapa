@@ -311,7 +311,7 @@ function EmployeeDetail() {
                     </CardContent>
                   </Card>
                 ))}
-              {currentUser?.appRole === "ld_admin" && (() => {
+              {(currentUser?.appRole === "ld_admin" || currentUser?.appRole === "super_admin") && (() => {
                 const inPlans = successionPlans.filter((sp) => sp.successorCandidates.some((c) => c.employeeId === emp.id));
                 if (inPlans.length === 0) return null;
                 return (
