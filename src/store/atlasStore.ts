@@ -185,7 +185,7 @@ export function useCurrentUser() {
 }
 
 export function visibleEmployees(currentRole: UserRole, currentId: string, all: Employee[]): Employee[] {
-  if (currentRole === "ld_admin" || currentRole === "manager") {
+  if (currentRole === "ld_admin" || currentRole === "super_admin" || currentRole === "manager") {
     if (currentRole === "manager") {
       const direct = all.filter((e) => e.managerId === currentId);
       const leaders = direct.filter((e) => e.appRole === "leader").map((e) => e.id);
