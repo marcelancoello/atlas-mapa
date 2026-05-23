@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, BookOpen, ClipboardCheck, GraduationCap,
-  Library, TrendingUp, Map, ShieldCheck, User, Bell, LogOut,
+  Library, TrendingUp, Map, ShieldCheck, User, Bell, LogOut, Settings2,
 } from "lucide-react";
 import { useAtlas, useCurrentUser } from "@/store/atlasStore";
 import { Avatar } from "@/components/atlas/AtlasUI";
@@ -9,27 +9,29 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import type { UserRole } from "@/types";
 
-const NAV: Array<{ icon: typeof LayoutDashboard; label: string; to: string; roles: UserRole[] }> = [
-  { icon: LayoutDashboard, label: "Dashboard", to: "/dashboard", roles: ["leader", "manager", "ld_admin"] },
-  { icon: Users, label: "Empleados", to: "/empleados", roles: ["leader", "manager", "ld_admin"] },
-  { icon: BookOpen, label: "Competencias", to: "/competencias", roles: ["employee", "leader", "manager", "ld_admin"] },
-  { icon: ClipboardCheck, label: "Assessments", to: "/assessments", roles: ["leader", "manager", "ld_admin"] },
-  { icon: GraduationCap, label: "Planes", to: "/planes", roles: ["leader", "manager", "ld_admin"] },
-  { icon: Library, label: "Catálogo", to: "/catalogo", roles: ["employee", "leader", "manager", "ld_admin"] },
-  { icon: TrendingUp, label: "Transiciones", to: "/transiciones", roles: ["leader", "manager", "ld_admin"] },
-  { icon: Map, label: "Matriz de roles", to: "/matriz-roles", roles: ["employee", "leader", "manager", "ld_admin"] },
-  { icon: ShieldCheck, label: "L&D Admin", to: "/ld-admin", roles: ["ld_admin"] },
-  { icon: User, label: "Mi perfil", to: "/mi-perfil", roles: ["employee", "leader", "manager", "ld_admin"] },
+const NAV: Array<{ icon: typeof LayoutDashboard; label: string; to: string; roles: UserRole[]; separatorBefore?: boolean }> = [
+  { icon: LayoutDashboard, label: "Dashboard", to: "/dashboard", roles: ["leader", "manager", "ld_admin", "super_admin"] },
+  { icon: Users, label: "Empleados", to: "/empleados", roles: ["leader", "manager", "ld_admin", "super_admin"] },
+  { icon: BookOpen, label: "Competencias", to: "/competencias", roles: ["employee", "leader", "manager", "ld_admin", "super_admin"] },
+  { icon: ClipboardCheck, label: "Assessments", to: "/assessments", roles: ["leader", "manager", "ld_admin", "super_admin"] },
+  { icon: GraduationCap, label: "Planes", to: "/planes", roles: ["leader", "manager", "ld_admin", "super_admin"] },
+  { icon: Library, label: "Catálogo", to: "/catalogo", roles: ["employee", "leader", "manager", "ld_admin", "super_admin"] },
+  { icon: TrendingUp, label: "Transiciones", to: "/transiciones", roles: ["leader", "manager", "ld_admin", "super_admin"] },
+  { icon: Map, label: "Matriz de roles", to: "/matriz-roles", roles: ["employee", "leader", "manager", "ld_admin", "super_admin"] },
+  { icon: ShieldCheck, label: "L&D Admin", to: "/ld-admin", roles: ["ld_admin", "super_admin"] },
+  { icon: Settings2, label: "Super Admin", to: "/super-admin", roles: ["super_admin"], separatorBefore: true },
+  { icon: User, label: "Mi perfil", to: "/mi-perfil", roles: ["employee", "leader", "manager", "ld_admin", "super_admin"] },
 ];
 
 const ROLE_LABEL: Record<UserRole, string> = {
-  employee: "Empleado", leader: "Líder", manager: "Manager", ld_admin: "L&D Admin",
+  employee: "Empleado", leader: "Líder", manager: "Manager", ld_admin: "L&D Admin", super_admin: "SA",
 };
 const ROLE_TONE: Record<UserRole, string> = {
   employee: "bg-slate-500/20 text-slate-300",
   leader: "bg-emerald-500/20 text-emerald-300",
   manager: "bg-pink-500/20 text-pink-300",
   ld_admin: "bg-primary/20 text-primary",
+  super_admin: "bg-violet-600/30 text-violet-300",
 };
 
 export function Sidebar() {
@@ -57,18 +59,21 @@ export function Sidebar() {
         {visible.map((item) => {
           const active = pathname === item.to || (item.to !== "/" && pathname.startsWith(item.to));
           return (
-            <Link
-              key={item.to} to={item.to}
-              className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-                active
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                  : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
-              )}
-            >
-              <item.icon className="h-4 w-4" />
-              {item.label}
-            </Link>
+            <div key={item.to}>
+              {item.separatorBefore && <div className="my-2 border-t border-sidebar-border/70" />}
+              <Link
+                to={item.to}
+                className={cn(
+                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                  active
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                )}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            </div>
           );
         })}
       </nav>

@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_app/ld-admin")({
 function LdAdmin() {
   const user = useCurrentUser();
   const { plans, employees, assessments, competencies, approvePlan, transitions } = useAtlas();
-  if (user?.appRole !== "ld_admin") {
+  if (user?.appRole !== "ld_admin" && user?.appRole !== "super_admin") {
     return <div className="p-8 text-center text-muted-foreground">Acceso solo para L&D Admin.</div>;
   }
   const pendingPlans = plans.filter((p) => p.status === "pendiente-aprobacion");

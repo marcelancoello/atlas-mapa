@@ -25,7 +25,7 @@ function Transiciones() {
 
   const canManage = (employeeId: string) => {
     if (!me) return false;
-    if (me.appRole === "ld_admin" || me.appRole === "manager") return true;
+    if (me.appRole === "ld_admin" || me.appRole === "super_admin" || me.appRole === "manager") return true;
     const emp = employees.find((e) => e.id === employeeId);
     return me.appRole === "leader" && emp?.leaderId === me.id;
   };

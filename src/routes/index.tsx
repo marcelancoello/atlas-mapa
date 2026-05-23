@@ -9,13 +9,14 @@ export const Route = createFileRoute("/")({
 });
 
 const ROLE_BADGE: Record<string, string> = {
+  super_admin: "bg-violet-600/30 text-violet-200 border-violet-500/60",
   ld_admin: "bg-primary/20 text-primary border-primary/40",
   manager: "bg-pink-500/20 text-pink-300 border-pink-500/40",
   leader: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
   employee: "bg-slate-500/20 text-slate-300 border-slate-500/40",
 };
 const ROLE_LABEL: Record<string, string> = {
-  ld_admin: "L&D Admin", manager: "Manager", leader: "Líder", employee: "Empleado",
+  super_admin: "SA", ld_admin: "L&D Admin", manager: "Manager", leader: "Líder", employee: "Empleado",
 };
 
 function Login() {
@@ -28,7 +29,7 @@ function Login() {
   }, [hydrated, currentUserId, navigate]);
 
   const featured = seedEmployees.filter((e) =>
-    ["u-1", "u-2", "u-3", "u-4", "u-5", "u-6"].includes(e.id)
+    ["u-1", "u-2", "u-3", "u-4", "u-5", "u-6", "u-9"].includes(e.id)
   );
 
   return (

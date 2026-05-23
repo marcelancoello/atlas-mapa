@@ -21,7 +21,7 @@ function Competencias() {
   const employees = useAtlas((s) => s.employees);
   const assessments = useAtlas((s) => s.assessments);
   const me = useCurrentUser();
-  const canSearch = me && (me.appRole === "leader" || me.appRole === "manager" || me.appRole === "ld_admin");
+  const canSearch = me && (me.appRole === "leader" || me.appRole === "manager" || me.appRole === "ld_admin" || me.appRole === "super_admin");
 
   const [q, setQ] = useState("");
   const [dom, setDom] = useState<string>("all");
