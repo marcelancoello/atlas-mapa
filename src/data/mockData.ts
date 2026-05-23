@@ -18,6 +18,7 @@ export const employees: Employee[] = [
   { id: "u-6", name: "Camila Martínez", email: "camila.martinez@atlas.io", role: "QA Analyst", seniority: "Junior", stack: ["QA", "Cypress"], joinDate: "2023-05-10", leaderId: "u-3", managerId: "u-2", appRole: "employee", unit: "negocio", status: "active", readinessScore: 5.5 },
   { id: "u-7", name: "Sebastián Torres", email: "sebastian.torres@atlas.io", role: "Data Engineer", seniority: "Semi-Senior", stack: ["Python", "SQL", "AWS"], joinDate: "2022-08-15", leaderId: "u-3", managerId: "u-2", appRole: "employee", unit: "soporte", status: "active", readinessScore: 6.8 },
   { id: "u-8", name: "Lucas Fernández", email: "lucas.fernandez@atlas.io", role: "Frontend Engineer", seniority: "Junior", stack: ["React"], joinDate: "2024-11-05", leaderId: "u-3", managerId: "u-2", appRole: "employee", unit: "negocio", status: "onboarding", readinessScore: 4.1 },
+  { id: "u-9", name: "Carlos Méndez", email: "carlos.mendez@atlas.io", role: "Super Admin", seniority: "Director", stack: ["Admin"], joinDate: "2018-01-01", appRole: "super_admin", unit: "soporte", status: "active", readinessScore: 10 },
 ];
 
 function gapSeverity(g: number): CompetencyAssessment["gapSeverity"] {
