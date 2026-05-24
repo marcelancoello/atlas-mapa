@@ -15,7 +15,6 @@ import { Route as AppTransicionesRouteImport } from './routes/_app/transiciones'
 import { Route as AppSuperAdminRouteImport } from './routes/_app/super-admin'
 import { Route as AppSucesionRouteImport } from './routes/_app/sucesion'
 import { Route as AppPlanesRouteImport } from './routes/_app/planes'
-import { Route as AppSucesionRouteImport } from './routes/_app/sucesion'
 import { Route as AppMiPerfilRouteImport } from './routes/_app/mi-perfil'
 import { Route as AppMatrizRolesRouteImport } from './routes/_app/matriz-roles'
 import { Route as AppLdAdminRouteImport } from './routes/_app/ld-admin'
@@ -53,11 +52,6 @@ const AppSucesionRoute = AppSucesionRouteImport.update({
 const AppPlanesRoute = AppPlanesRouteImport.update({
   id: '/planes',
   path: '/planes',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSucesionRoute = AppSucesionRouteImport.update({
-  id: '/sucesion',
-  path: '/sucesion',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMiPerfilRoute = AppMiPerfilRouteImport.update({
