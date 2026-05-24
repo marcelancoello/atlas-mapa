@@ -108,7 +108,11 @@ function LdAdmin() {
                   <div className="text-sm font-medium">{emp?.name} — {t.fromSeniority} → {t.toSeniority}</div>
                   <div className="text-xs text-muted-foreground">{t.readinessPercentage}% cumplimiento técnico</div>
                 </div>
-                <StatusBadge value={t.stage} />
+                <div className="flex items-center gap-2">
+                  <StatusBadge value={t.stage} />
+                  <Button size="sm" onClick={() => { approveTransition(t.id, approverName); toast.success(`Transición aprobada por ${approverName} · ahora visible en el historial`); }}>Aprobar</Button>
+                  <Button size="sm" variant="outline" onClick={() => setReturnModal({ kind: "transition", id: t.id })}>Devolver</Button>
+                </div>
               </div>
             );
           })}
