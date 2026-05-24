@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { useAtlas, useCurrentUser } from "@/store/atlasStore";
 import { PageHeader } from "@/components/atlas/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/atlas/AtlasUI";
 import { SuccessionPanel } from "@/components/atlas/SuccessionPanel";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, AreaChart, Area, CartesianGrid, Cell } from "recharts";
