@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, BookOpen, ClipboardCheck, GraduationCap,
-  Library, TrendingUp, Map, ShieldCheck, User, Bell, LogOut, Settings2,
+  Library, TrendingUp, Map, ShieldCheck, User, Bell, LogOut, Settings2, Crown,
 } from "lucide-react";
 import { useAtlas, useCurrentUser } from "@/store/atlasStore";
 import { Avatar } from "@/components/atlas/AtlasUI";
@@ -17,6 +17,7 @@ const NAV: Array<{ icon: typeof LayoutDashboard; label: string; to: string; role
   { icon: GraduationCap, label: "Planes", to: "/planes", roles: ["leader", "manager", "ld_admin", "super_admin"] },
   { icon: Library, label: "Catálogo", to: "/catalogo", roles: ["employee", "leader", "manager", "ld_admin", "super_admin"] },
   { icon: TrendingUp, label: "Transiciones", to: "/transiciones", roles: ["leader", "manager", "ld_admin", "super_admin"] },
+  { icon: Crown, label: "Sucesión", to: "/sucesion", roles: ["ld_admin", "super_admin"] },
   { icon: Map, label: "Matriz de roles", to: "/matriz-roles", roles: ["employee", "leader", "manager", "ld_admin", "super_admin"] },
   { icon: ShieldCheck, label: "L&D Admin", to: "/ld-admin", roles: ["ld_admin", "super_admin"] },
   { icon: Settings2, label: "Super Admin", to: "/super-admin", roles: ["super_admin"], separatorBefore: true },
