@@ -7,7 +7,82 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { toast } from "sonner";
-import { AlertTriangle, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, ShieldAlert, CheckCircle2, TrendingUp, AlertCircle } from "lucide-react";
+
+type DictamenResult = {
+  level: "listo" | "en-camino" | "requiere-desarrollo";
+  label: string;
+  emoji: string;
+  description: string;
+  actions: string[];
+  colorClasses: string;
+  iconColor: string;
+};
+
+function computeDictamen(
+  readinessPercentage: number,
+  dimensionScores: Record<string, "no-evidenciada" | "en-desarrollo" | "demostrada" | "referente">,
+): DictamenResult {
+  const metDimensions = Object.values(dimensionScores).filter(
+    (v) => v === "demostrada" || v === "referente",
+  ).length;
+  const weakDimensions = Object.entries(dimensionScores)
+    .filter(([, v]) => v === "no-evidenciada" || v === "en-desarrollo")
+    .map(([k]) => k);
+
+  if (readinessPercentage >= 80 && metDimensions >= 3) {
+    return {
+      level: "listo",
+      label: "LISTO",
+      emoji: "🟢",
+      description: `Cumple los criterios técnicos (${readinessPercentage}%) y demuestra ${metDimensions}/5 dimensiones en nivel "Demostrada" o "Referente". Apto para avanzar a la siguiente etapa del flujo de promoción.`,
+      actions: [
+        "Enviar evaluación a L&D para revisión formal",
+        "Notificar al manager para coordinar entrevista de cierre",
+        weakDimensions.length > 0
+          ? `Reforzar dimensiones aún en desarrollo: ${weakDimensions.join(", ")}`
+          : "Documentar evidencias finales en el legajo del colaborador",
+      ],
+      colorClasses: "border-success/40 bg-success/10",
+      iconColor: "text-success",
+    };
+  }
+
+  if (readinessPercentage >= 60 || metDimensions >= 2) {
+    return {
+      level: "en-camino",
+      label: "EN CAMINO",
+      emoji: "🟡",
+      description: `Avance parcial: ${readinessPercentage}% técnico y ${metDimensions}/5 dimensiones consolidadas. El colaborador progresa pero aún no cumple el umbral para promoción.`,
+      actions: [
+        "Diseñar plan de formación trimestral orientado a brechas críticas",
+        weakDimensions.length > 0
+          ? `Trabajar dimensiones pendientes: ${weakDimensions.slice(0, 3).join(", ")}`
+          : "Reforzar dimensiones de mayor impacto en el rol destino",
+        "Reevaluar en 90 días con nueva instancia de assessment",
+      ],
+      colorClasses: "border-warning/40 bg-warning/10",
+      iconColor: "text-warning",
+    };
+  }
+
+  return {
+    level: "requiere-desarrollo",
+    label: "REQUIERE DESARROLLO",
+    emoji: "🔴",
+    description: `Brecha significativa: ${readinessPercentage}% técnico y solo ${metDimensions}/5 dimensiones cumplidas. No es viable iniciar la transición en este momento.`,
+    actions: [
+      "Pausar el proceso de transición y comunicar feedback al colaborador",
+      "Construir plan de desarrollo integral de 6 meses con mentoría",
+      weakDimensions.length > 0
+        ? `Foco prioritario en: ${weakDimensions.slice(0, 3).join(", ")}`
+        : "Identificar competencias core a fortalecer con L&D",
+      "Reevaluar al cierre del próximo ciclo semestral",
+    ],
+    colorClasses: "border-danger/40 bg-danger/10",
+    iconColor: "text-danger",
+  };
+}
 
 const STAGES = ["requisitos", "evaluacion", "revision-ld", "aprobacion-manager", "aprobado"] as const;
 
