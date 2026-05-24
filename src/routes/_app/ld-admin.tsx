@@ -18,10 +18,20 @@ export const Route = createFileRoute("/_app/ld-admin")({
 
 function LdAdmin() {
   const user = useCurrentUser();
-  const { plans, employees, assessments, competencies, approvePlan, transitions } = useAtlas();
+  const { plans, employees, assessments, competencies, approvePlan, returnPlan, approveTransition, returnTransition, transitions } = useAtlas();
+  const [returnModal, setReturnModal] = useState<{ kind: "plan" | "transition"; id: string } | null>(null);
+  const [returnNote, setReturnNote] = useState("");
   if (user?.appRole !== "ld_admin" && user?.appRole !== "super_admin") {
     return <div className="p-8 text-center text-muted-foreground">Acceso solo para L&D Admin.</div>;
   }
+  const approverName = user.appRole === "ld_admin" ? "Ana Pérez" : user.name;
+  const submitReturn = () => {
+    if (!returnModal || !returnNote.trim()) { toast.error("Ingresá una nota"); return; }
+    if (returnModal.kind === "plan") returnPlan(returnModal.id, returnNote.trim(), approverName);
+    else returnTransition(returnModal.id, returnNote.trim(), approverName);
+    toast.success("Devuelto para revisión · notificación enviada al líder");
+    setReturnModal(null); setReturnNote("");
+  };
   const pendingPlans = plans.filter((p) => p.status === "pendiente-aprobacion");
   const pendingTrans = transitions.filter((t) => t.stage === "revision-ld" || t.stage === "excepcion-ceo");
 
