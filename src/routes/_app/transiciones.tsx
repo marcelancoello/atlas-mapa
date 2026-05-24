@@ -232,27 +232,74 @@ function Transiciones() {
                   </div>
                 )}
 
-                {!isRequisitos && !isException && (
-                  <>
-                    <div className="grid sm:grid-cols-3 gap-3 text-center">
-                      <div className="rounded-md bg-background/40 p-3"><div className="text-xs text-muted-foreground">Cumplimiento técnico</div><div className="font-display text-2xl">{t.readinessPercentage}%</div></div>
-                      <div className="rounded-md bg-background/40 p-3"><div className="text-xs text-muted-foreground">Dimensiones referente/demostrada</div><div className="font-display text-2xl">{Object.values(t.dimensionScores).filter((v) => v === "demostrada" || v === "referente").length}/5</div></div>
-                      <div className="rounded-md bg-background/40 p-3"><div className="text-xs text-muted-foreground">Dictamen ATLAS</div><div className={`font-display text-lg ${t.dictamen === "listo" ? "text-success" : t.dictamen === "en-camino" ? "text-warning" : "text-danger"}`}>{t.dictamen ?? "—"}</div></div>
-                    </div>
-
-                    <p className="text-sm italic text-muted-foreground">"{t.executiveSummary}"</p>
-
-                    {analyzing === t.id ? <AtlasSpinner /> : (
-                      <div className="flex gap-2">
-                        <Button size="sm" onClick={() => {
-                          setAnalyzing(t.id);
-                          setTimeout(() => { setAnalyzing(null); toast.success("Dictamen regenerado por ATLAS"); }, 1500);
-                        }}>Regenerar dictamen</Button>
-                        <Button size="sm" variant="outline" onClick={() => toast.success("Enviado a L&D")}>Enviar a L&D</Button>
+                {!isRequisitos && !isException && (() => {
+                  const dictamen = computeDictamen(t.readinessPercentage, t.dimensionScores);
+                  const metDims = Object.values(t.dimensionScores).filter((v) => v === "demostrada" || v === "referente").length;
+                  return (
+                    <>
+                      <div className="grid sm:grid-cols-3 gap-3 text-center">
+                        <div className="rounded-md bg-background/40 p-3"><div className="text-xs text-muted-foreground">Cumplimiento técnico</div><div className="font-display text-2xl">{t.readinessPercentage}%</div></div>
+                        <div className="rounded-md bg-background/40 p-3"><div className="text-xs text-muted-foreground">Dimensiones referente/demostrada</div><div className="font-display text-2xl">{metDims}/5</div></div>
+                        <div className="rounded-md bg-background/40 p-3"><div className="text-xs text-muted-foreground">Dictamen ATLAS</div><div className={`font-display text-lg ${dictamen.iconColor}`}>{dictamen.emoji} {dictamen.label.toLowerCase()}</div></div>
                       </div>
-                    )}
-                  </>
-                )}
+
+                      <div
+                        key={`${t.id}-${dictamen.level}`}
+                        className={`rounded-xl border-2 p-6 space-y-4 animate-fade-in ${dictamen.colorClasses}`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="text-4xl leading-none">{dictamen.emoji}</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h3 className={`font-display font-bold text-2xl tracking-tight ${dictamen.iconColor}`}>
+                                {dictamen.label}
+                              </h3>
+                              <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                                Dictamen ATLAS
+                              </span>
+                            </div>
+                            <p className="text-sm text-foreground/90 mt-2 leading-relaxed">
+                              {dictamen.description}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="border-t border-border/50 pt-4 space-y-2">
+                          <div className="flex items-center gap-2">
+                            {dictamen.level === "listo" ? (
+                              <TrendingUp className={`h-4 w-4 ${dictamen.iconColor}`} />
+                            ) : (
+                              <AlertCircle className={`h-4 w-4 ${dictamen.iconColor}`} />
+                            )}
+                            <h4 className="font-display font-semibold text-sm">Acciones de cierre sugeridas</h4>
+                          </div>
+                          <ul className="space-y-1.5">
+                            {dictamen.actions.map((a, i) => (
+                              <li key={i} className="flex items-start gap-2 text-sm text-foreground/85">
+                                <span className={`mt-1.5 h-1.5 w-1.5 rounded-full shrink-0 ${dictamen.iconColor.replace("text-", "bg-")}`} />
+                                <span className="leading-relaxed">{a}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      {t.executiveSummary && (
+                        <p className="text-sm italic text-muted-foreground">"{t.executiveSummary}"</p>
+                      )}
+
+                      {analyzing === t.id ? <AtlasSpinner /> : (
+                        <div className="flex gap-2">
+                          <Button size="sm" onClick={() => {
+                            setAnalyzing(t.id);
+                            setTimeout(() => { setAnalyzing(null); toast.success("Dictamen regenerado por ATLAS"); }, 1500);
+                          }}>Regenerar dictamen</Button>
+                          <Button size="sm" variant="outline" onClick={() => toast.success("Enviado a L&D")}>Enviar a L&D</Button>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </CardContent>
             </Card>
           );
