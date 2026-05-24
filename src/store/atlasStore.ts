@@ -36,6 +36,9 @@ interface AtlasState {
   markNotificationRead: (id: string) => void;
   markAllRead: (userId: string) => void;
   approvePlan: (planId: string, approverName: string) => void;
+  returnPlan: (planId: string, note: string, returnedBy: string) => void;
+  approveTransition: (transitionId: string, approverName: string) => void;
+  returnTransition: (transitionId: string, note: string, returnedBy: string) => void;
   approveCourseRequest: (id: string, approverName: string) => void;
   rejectCourseRequest: (id: string, approverName: string) => void;
   requestCourse: (employeeId: string, courseId: string) => void;
