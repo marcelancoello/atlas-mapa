@@ -187,6 +187,22 @@ function LdAdmin() {
           <SuccessionPanel />
         </TabsContent>
       </Tabs>
+
+      <Dialog open={!!returnModal} onOpenChange={(o) => { if (!o) { setReturnModal(null); setReturnNote(""); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Devolver para revisión</DialogTitle>
+            <DialogDescription>
+              Ingresá una nota explicando los cambios necesarios. Se enviará una notificación al líder.
+            </DialogDescription>
+          </DialogHeader>
+          <Textarea value={returnNote} onChange={(e) => setReturnNote(e.target.value)} placeholder="Detalle de la devolución…" rows={4} />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setReturnModal(null); setReturnNote(""); }}>Cancelar</Button>
+            <Button onClick={submitReturn}>Enviar devolución</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
