@@ -88,8 +88,8 @@ function LdAdmin() {
                   <div className="text-xs text-muted-foreground">{p.items.length} ítems · {p.items.reduce((s,i)=>s+i.durationHours,0)}h</div>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="sm" onClick={() => { approvePlan(p.id, user.name); toast.success("Plan aprobado"); }}>Aprobar</Button>
-                  <Button size="sm" variant="outline" onClick={() => toast("Devuelto para revisión")}>Devolver</Button>
+                  <Button size="sm" onClick={() => { approvePlan(p.id, approverName); toast.success(`Plan aprobado por ${approverName} · colaborador notificado`); }}>Aprobar</Button>
+                  <Button size="sm" variant="outline" onClick={() => setReturnModal({ kind: "plan", id: p.id })}>Devolver</Button>
                 </div>
               </div>
             );
