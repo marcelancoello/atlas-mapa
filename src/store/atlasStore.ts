@@ -36,6 +36,9 @@ interface AtlasState {
   markNotificationRead: (id: string) => void;
   markAllRead: (userId: string) => void;
   approvePlan: (planId: string, approverName: string) => void;
+  returnPlan: (planId: string, note: string, returnedBy: string) => void;
+  approveTransition: (transitionId: string, approverName: string) => void;
+  returnTransition: (transitionId: string, note: string, returnedBy: string) => void;
   approveCourseRequest: (id: string, approverName: string) => void;
   rejectCourseRequest: (id: string, approverName: string) => void;
   requestCourse: (employeeId: string, courseId: string) => void;
@@ -100,12 +103,68 @@ export const useAtlas = create<AtlasState>()(
         set({ notifications: get().notifications.map((n) => n.id === id ? { ...n, read: true } : n) }),
       markAllRead: (userId) =>
         set({ notifications: get().notifications.map((n) => n.userId === userId ? { ...n, read: true } : n) }),
-      approvePlan: (planId, approverName) =>
+      approvePlan: (planId, approverName) => {
+        const plan = get().plans.find((p) => p.id === planId);
+        const now = new Date().toISOString();
         set({
           plans: get().plans.map((p) => p.id === planId
-            ? { ...p, status: "aprobado", approvedAt: new Date().toISOString(), approvedBy: approverName }
+            ? { ...p, status: "aprobado", approvedAt: now, approvedBy: approverName }
             : p),
-        }),
+          notifications: plan ? [...get().notifications, {
+            id: `n-${Date.now()}`, userId: plan.employeeId, type: "plan-aprobado",
+            title: "Plan de formación aprobado",
+            message: `Tu plan fue aprobado por ${approverName}.`,
+            read: false, createdAt: now, link: "/mi-perfil",
+          }] : get().notifications,
+        });
+      },
+      returnPlan: (planId, note, returnedBy) => {
+        const plan = get().plans.find((p) => p.id === planId);
+        const emp = plan ? get().employees.find((e) => e.id === plan.employeeId) : null;
+        const now = new Date().toISOString();
+        const leaderId = emp?.leaderId ?? emp?.managerId;
+        set({
+          plans: get().plans.map((p) => p.id === planId
+            ? { ...p, status: "borrador", notes: note }
+            : p),
+          notifications: leaderId ? [...get().notifications, {
+            id: `n-${Date.now()}`, userId: leaderId, type: "plan-devuelto",
+            title: "Plan devuelto para revisión",
+            message: `${returnedBy} devolvió el plan de ${emp?.name}: ${note}`,
+            read: false, createdAt: now, link: "/planes",
+          }] : get().notifications,
+        });
+      },
+      approveTransition: (transitionId, approverName) => {
+        const t = get().transitions.find((x) => x.id === transitionId);
+        const now = new Date().toISOString();
+        set({
+          transitions: get().transitions.map((x) => x.id === transitionId
+            ? { ...x, stage: "aprobado" } : x),
+          notifications: t ? [...get().notifications, {
+            id: `n-${Date.now()}`, userId: t.employeeId, type: "transicion-aprobada",
+            title: "Transición de seniority aprobada",
+            message: `Tu transición ${t.fromSeniority} → ${t.toSeniority} fue aprobada por ${approverName}.`,
+            read: false, createdAt: now, link: "/transiciones",
+          }] : get().notifications,
+        });
+      },
+      returnTransition: (transitionId, note, returnedBy) => {
+        const t = get().transitions.find((x) => x.id === transitionId);
+        const emp = t ? get().employees.find((e) => e.id === t.employeeId) : null;
+        const leaderId = emp?.leaderId ?? emp?.managerId;
+        const now = new Date().toISOString();
+        set({
+          transitions: get().transitions.map((x) => x.id === transitionId
+            ? { ...x, stage: "evaluacion", executiveSummary: note } : x),
+          notifications: leaderId ? [...get().notifications, {
+            id: `n-${Date.now()}`, userId: leaderId, type: "transicion-devuelta",
+            title: "Transición devuelta para revisión",
+            message: `${returnedBy} devolvió la transición de ${emp?.name}: ${note}`,
+            read: false, createdAt: now, link: "/transiciones",
+          }] : get().notifications,
+        });
+      },
       approveCourseRequest: (id, approverName) => {
         const req = get().courseRequests.find((r) => r.id === id);
         if (!req) return;

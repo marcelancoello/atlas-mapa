@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { useAtlas, useCurrentUser } from "@/store/atlasStore";
 import { PageHeader } from "@/components/atlas/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/atlas/AtlasUI";
 import { SuccessionPanel } from "@/components/atlas/SuccessionPanel";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, AreaChart, Area, CartesianGrid, Cell } from "recharts";
@@ -15,10 +18,20 @@ export const Route = createFileRoute("/_app/ld-admin")({
 
 function LdAdmin() {
   const user = useCurrentUser();
-  const { plans, employees, assessments, competencies, approvePlan, transitions } = useAtlas();
+  const { plans, employees, assessments, competencies, approvePlan, returnPlan, approveTransition, returnTransition, transitions } = useAtlas();
+  const [returnModal, setReturnModal] = useState<{ kind: "plan" | "transition"; id: string } | null>(null);
+  const [returnNote, setReturnNote] = useState("");
   if (user?.appRole !== "ld_admin" && user?.appRole !== "super_admin") {
     return <div className="p-8 text-center text-muted-foreground">Acceso solo para L&D Admin.</div>;
   }
+  const approverName = user.appRole === "ld_admin" ? "Ana Pérez" : user.name;
+  const submitReturn = () => {
+    if (!returnModal || !returnNote.trim()) { toast.error("Ingresá una nota"); return; }
+    if (returnModal.kind === "plan") returnPlan(returnModal.id, returnNote.trim(), approverName);
+    else returnTransition(returnModal.id, returnNote.trim(), approverName);
+    toast.success("Devuelto para revisión · notificación enviada al líder");
+    setReturnModal(null); setReturnNote("");
+  };
   const pendingPlans = plans.filter((p) => p.status === "pendiente-aprobacion");
   const pendingTrans = transitions.filter((t) => t.stage === "revision-ld" || t.stage === "excepcion-ceo");
 
@@ -75,8 +88,8 @@ function LdAdmin() {
                   <div className="text-xs text-muted-foreground">{p.items.length} ítems · {p.items.reduce((s,i)=>s+i.durationHours,0)}h</div>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="sm" onClick={() => { approvePlan(p.id, user.name); toast.success("Plan aprobado"); }}>Aprobar</Button>
-                  <Button size="sm" variant="outline" onClick={() => toast("Devuelto para revisión")}>Devolver</Button>
+                  <Button size="sm" onClick={() => { approvePlan(p.id, approverName); toast.success(`Plan aprobado por ${approverName} · colaborador notificado`); }}>Aprobar</Button>
+                  <Button size="sm" variant="outline" onClick={() => setReturnModal({ kind: "plan", id: p.id })}>Devolver</Button>
                 </div>
               </div>
             );
@@ -95,7 +108,11 @@ function LdAdmin() {
                   <div className="text-sm font-medium">{emp?.name} — {t.fromSeniority} → {t.toSeniority}</div>
                   <div className="text-xs text-muted-foreground">{t.readinessPercentage}% cumplimiento técnico</div>
                 </div>
-                <StatusBadge value={t.stage} />
+                <div className="flex items-center gap-2">
+                  <StatusBadge value={t.stage} />
+                  <Button size="sm" onClick={() => { approveTransition(t.id, approverName); toast.success(`Transición aprobada por ${approverName} · ahora visible en el historial`); }}>Aprobar</Button>
+                  <Button size="sm" variant="outline" onClick={() => setReturnModal({ kind: "transition", id: t.id })}>Devolver</Button>
+                </div>
               </div>
             );
           })}
@@ -170,6 +187,22 @@ function LdAdmin() {
           <SuccessionPanel />
         </TabsContent>
       </Tabs>
+
+      <Dialog open={!!returnModal} onOpenChange={(o) => { if (!o) { setReturnModal(null); setReturnNote(""); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Devolver para revisión</DialogTitle>
+            <DialogDescription>
+              Ingresá una nota explicando los cambios necesarios. Se enviará una notificación al líder.
+            </DialogDescription>
+          </DialogHeader>
+          <Textarea value={returnNote} onChange={(e) => setReturnNote(e.target.value)} placeholder="Detalle de la devolución…" rows={4} />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setReturnModal(null); setReturnNote(""); }}>Cancelar</Button>
+            <Button onClick={submitReturn}>Enviar devolución</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
