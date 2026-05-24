@@ -13,6 +13,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppTransicionesRouteImport } from './routes/_app/transiciones'
 import { Route as AppSuperAdminRouteImport } from './routes/_app/super-admin'
+import { Route as AppSucesionRouteImport } from './routes/_app/sucesion'
 import { Route as AppPlanesRouteImport } from './routes/_app/planes'
 import { Route as AppMiPerfilRouteImport } from './routes/_app/mi-perfil'
 import { Route as AppMatrizRolesRouteImport } from './routes/_app/matriz-roles'
@@ -41,6 +42,11 @@ const AppTransicionesRoute = AppTransicionesRouteImport.update({
 const AppSuperAdminRoute = AppSuperAdminRouteImport.update({
   id: '/super-admin',
   path: '/super-admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSucesionRoute = AppSucesionRouteImport.update({
+  id: '/sucesion',
+  path: '/sucesion',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPlanesRoute = AppPlanesRouteImport.update({
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/matriz-roles': typeof AppMatrizRolesRoute
   '/mi-perfil': typeof AppMiPerfilRoute
   '/planes': typeof AppPlanesRoute
+  '/sucesion': typeof AppSucesionRoute
   '/super-admin': typeof AppSuperAdminRoute
   '/transiciones': typeof AppTransicionesRoute
   '/empleados/$id': typeof AppEmpleadosIdRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/matriz-roles': typeof AppMatrizRolesRoute
   '/mi-perfil': typeof AppMiPerfilRoute
   '/planes': typeof AppPlanesRoute
+  '/sucesion': typeof AppSucesionRoute
   '/super-admin': typeof AppSuperAdminRoute
   '/transiciones': typeof AppTransicionesRoute
   '/empleados/$id': typeof AppEmpleadosIdRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/_app/matriz-roles': typeof AppMatrizRolesRoute
   '/_app/mi-perfil': typeof AppMiPerfilRoute
   '/_app/planes': typeof AppPlanesRoute
+  '/_app/sucesion': typeof AppSucesionRoute
   '/_app/super-admin': typeof AppSuperAdminRoute
   '/_app/transiciones': typeof AppTransicionesRoute
   '/_app/empleados/$id': typeof AppEmpleadosIdRoute
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/matriz-roles'
     | '/mi-perfil'
     | '/planes'
+    | '/sucesion'
     | '/super-admin'
     | '/transiciones'
     | '/empleados/$id'
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/matriz-roles'
     | '/mi-perfil'
     | '/planes'
+    | '/sucesion'
     | '/super-admin'
     | '/transiciones'
     | '/empleados/$id'
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/_app/matriz-roles'
     | '/_app/mi-perfil'
     | '/_app/planes'
+    | '/_app/sucesion'
     | '/_app/super-admin'
     | '/_app/transiciones'
     | '/_app/empleados/$id'
@@ -223,6 +235,13 @@ declare module '@tanstack/react-router' {
       path: '/super-admin'
       fullPath: '/super-admin'
       preLoaderRoute: typeof AppSuperAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/sucesion': {
+      id: '/_app/sucesion'
+      path: '/sucesion'
+      fullPath: '/sucesion'
+      preLoaderRoute: typeof AppSucesionRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/planes': {
@@ -307,6 +326,7 @@ interface AppRouteChildren {
   AppMatrizRolesRoute: typeof AppMatrizRolesRoute
   AppMiPerfilRoute: typeof AppMiPerfilRoute
   AppPlanesRoute: typeof AppPlanesRoute
+  AppSucesionRoute: typeof AppSucesionRoute
   AppSuperAdminRoute: typeof AppSuperAdminRoute
   AppTransicionesRoute: typeof AppTransicionesRoute
   AppEmpleadosIdRoute: typeof AppEmpleadosIdRoute
@@ -322,6 +342,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMatrizRolesRoute: AppMatrizRolesRoute,
   AppMiPerfilRoute: AppMiPerfilRoute,
   AppPlanesRoute: AppPlanesRoute,
+  AppSucesionRoute: AppSucesionRoute,
   AppSuperAdminRoute: AppSuperAdminRoute,
   AppTransicionesRoute: AppTransicionesRoute,
   AppEmpleadosIdRoute: AppEmpleadosIdRoute,
