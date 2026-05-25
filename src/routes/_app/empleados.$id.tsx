@@ -10,7 +10,6 @@ import { Calendar, FileDown, GraduationCap, ChevronLeft, Check, ClipboardEdit, C
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { exportCVtoPDF, exportCVtoDOCX } from "@/lib/cvExport";
 import { CvTab } from "@/components/atlas/CvTab";
 
 export const Route = createFileRoute("/_app/empleados/$id")({
