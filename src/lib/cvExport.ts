@@ -50,21 +50,37 @@ export function exportCVtoPDF(d: CVExportData) {
     lines.forEach((ln: string) => { checkPage(); doc.text(ln, margin, y); y += 13; });
   };
 
+  if (d.cv.includeEnglish ?? true) {
+    section("Inglés");
+    text(englishLine(d.cv));
+  }
+
+  if (d.cv.includeEducation && d.cv.educationLevel) {
+    section("Educación");
+    text(d.cv.educationLevel, true);
+    if (d.cv.educationDegree || d.cv.educationInstitution) {
+      text([d.cv.educationDegree, d.cv.educationInstitution].filter(Boolean).join(" · "));
+    }
+  }
+
+  if (d.cv.includeTechnologies && (d.cv.technologies?.length ?? 0) > 0) {
+    section("Tecnologías");
+    text((d.cv.technologies ?? []).join(" · "));
+  }
+
+  if (d.cv.hasCertifications) {
+    const certs = d.cv.certifications.filter((x) => x.includeInCV && x.name);
+    if (certs.length) {
+      section("Certificaciones");
+      certs.forEach((x) => text(`${x.name} · ${x.issuer} (${x.year})${x.expiresAt ? ` · vence ${x.expiresAt}` : ""}`));
+    }
+  }
+
   section("Experiencia");
   d.cv.experience.filter((x) => x.includeInCV).forEach((x) => {
     text(`${x.role} · ${x.company}`, true);
     doc.setTextColor(120); text(`${x.from} — ${x.to ?? "Actualidad"}`); doc.setTextColor(20);
-    text(x.description); y += 4;
-  });
-
-  section("Educación");
-  d.cv.education.filter((x) => x.includeInCV).forEach((x) => {
-    text(`${x.degree} · ${x.institution} (${x.year})`);
-  });
-
-  section("Certificaciones");
-  d.cv.certifications.filter((x) => x.includeInCV).forEach((x) => {
-    text(`${x.name} · ${x.issuer} (${x.year})`);
+    if (x.description) text(x.description); y += 4;
   });
 
   if (d.cv.includeCompetencies) {
