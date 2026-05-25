@@ -11,6 +11,7 @@ export interface CVExportData {
 }
 
 const displayName = (d: CVExportData) => d.cv.anonymous ? "Colaborador" : d.emp.name;
+const englishLine = (cv: CVExportData["cv"]) => `${cv.englishGeneral ?? cv.englishLevel} · CEFR ${cv.englishCEFR ?? "—"}`;
 
 export function exportCVtoPDF(d: CVExportData) {
   const doc = new jsPDF({ unit: "pt", format: "a4" });
