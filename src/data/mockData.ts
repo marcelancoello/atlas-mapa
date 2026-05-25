@@ -129,17 +129,33 @@ export const transitions: SeniorityTransition[] = [
   },
 ];
 
-const cvFor = (emp: Employee): EmployeeCV => ({
-  employeeId: emp.id,
-  englishLevel: emp.seniority === "Trainee" ? "Intermedio" : "Avanzado",
-  experience: [
-    { company: "ATLAS", role: emp.role, from: emp.joinDate.slice(0, 7), description: `Desempeño como ${emp.role}.`, includeInCV: true },
-    { company: "Empresa anterior", role: "Desarrollador", from: "2018-01", to: emp.joinDate.slice(0, 7), description: "Experiencia previa relevante.", includeInCV: true },
-  ],
-  education: [{ institution: "Universidad", degree: "Ingeniería en Sistemas", year: "2018", includeInCV: true }],
-  certifications: [{ name: "Scrum Foundation", issuer: "Scrum.org", year: "2022", includeInCV: true }],
-  includeCompetencies: true, includeTrainings: true, anonymous: false,
-});
+const cvFor = (emp: Employee): EmployeeCV => {
+  const isNico = emp.id === "u-3";
+  return {
+    employeeId: emp.id,
+    englishLevel: emp.seniority === "Trainee" ? "Intermedio" : "Avanzado",
+    englishGeneral: isNico ? "Avanzado" : "Intermedio",
+    englishCEFR: isNico ? "B2" : "B1",
+    includeEnglish: true,
+    educationLevel: isNico ? "Universitario Completo" : "Universitario Incompleto",
+    educationInstitution: isNico ? "Universidad de Buenos Aires" : "Universidad Nacional",
+    educationDegree: isNico ? "Ingeniería Informática" : "Ingeniería en Sistemas",
+    includeEducation: true,
+    technologies: isNico ? ["React", "Node.js", "AWS", "TypeScript", "PostgreSQL"] : [],
+    includeTechnologies: true,
+    hasCertifications: isNico,
+    experience: [
+      { company: "ATLAS", role: emp.role, from: emp.joinDate.slice(0, 7), description: `Desempeño como ${emp.role}.`, includeInCV: true },
+      { company: "Empresa anterior", role: "Desarrollador", from: "2018-01", to: emp.joinDate.slice(0, 7), description: "Experiencia previa relevante.", includeInCV: true },
+    ],
+    education: [{ institution: "Universidad", degree: "Ingeniería en Sistemas", year: "2018", includeInCV: true }],
+    certifications: isNico
+      ? [{ name: "AWS Certified Solutions Architect — Associate", issuer: "Amazon Web Services", year: "2023", expiresAt: "2026-08", includeInCV: true }]
+      : [{ name: "Scrum Foundation", issuer: "Scrum.org", year: "2022", includeInCV: true }],
+    includeCompetencies: true, includeTrainings: true, anonymous: false,
+  };
+};
+
 
 export const cvs: EmployeeCV[] = employees.map(cvFor);
 
