@@ -207,6 +207,16 @@ export interface SuccessionPlan {
 export interface EmployeeCV {
   employeeId: string;
   englishLevel: "Básico" | "Intermedio" | "Avanzado" | "Bilingüe";
+  englishGeneral?: "Inicial" | "Intermedio" | "Avanzado" | "Certificado";
+  englishCEFR?: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+  includeEnglish?: boolean;
+  educationLevel?: EducationLevel;
+  educationInstitution?: string;
+  educationDegree?: string;
+  includeEducation?: boolean;
+  technologies?: string[];
+  includeTechnologies?: boolean;
+  hasCertifications?: boolean;
   experience: CVExperience[];
   education: CVEducation[];
   certifications: CVCertification[];
@@ -214,3 +224,4 @@ export interface EmployeeCV {
   includeTrainings: boolean;
   anonymous: boolean;
 }
+
