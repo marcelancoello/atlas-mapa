@@ -31,9 +31,10 @@ export function exportCVtoPDF(d: CVExportData) {
   doc.text(displayName(d), margin, y); y += 22;
 
   doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(90);
-  doc.text(`${d.emp.role} · ${d.emp.seniority} · Inglés ${d.cv.englishLevel}`, margin, y);
+  doc.text(`${d.emp.role} · ${d.emp.seniority}`, margin, y);
   y += 18;
   doc.setDrawColor(200); doc.line(margin, y, pageWidth - margin, y); y += 16;
+  doc.setTextColor(20);
   doc.setTextColor(20);
 
   const section = (title: string) => {
