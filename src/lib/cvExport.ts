@@ -109,23 +109,41 @@ export async function exportCVtoDOCX(d: CVExportData) {
 
   const children: Paragraph[] = [
     new Paragraph({ alignment: AlignmentType.LEFT, children: [new TextRun({ text: displayName(d), bold: true, size: 40 })] }),
-    new Paragraph({ children: [new TextRun({ text: `${d.emp.role} · ${d.emp.seniority} · Inglés ${d.cv.englishLevel}`, color: "555555", size: 22 })], spacing: { after: 200 } }),
+    new Paragraph({ children: [new TextRun({ text: `${d.emp.role} · ${d.emp.seniority}`, color: "555555", size: 22 })], spacing: { after: 200 } }),
   ];
+
+  if (d.cv.includeEnglish ?? true) {
+    children.push(section("Inglés"));
+    children.push(para(englishLine(d.cv)));
+  }
+
+  if (d.cv.includeEducation && d.cv.educationLevel) {
+    children.push(section("Educación"));
+    children.push(para(d.cv.educationLevel, { bold: true }));
+    if (d.cv.educationDegree || d.cv.educationInstitution) {
+      children.push(para([d.cv.educationDegree, d.cv.educationInstitution].filter(Boolean).join(" · ")));
+    }
+  }
+
+  if (d.cv.includeTechnologies && (d.cv.technologies?.length ?? 0) > 0) {
+    children.push(section("Tecnologías"));
+    children.push(para((d.cv.technologies ?? []).join(" · ")));
+  }
+
+  if (d.cv.hasCertifications) {
+    const certs = d.cv.certifications.filter((x) => x.includeInCV && x.name);
+    if (certs.length) {
+      children.push(section("Certificaciones"));
+      certs.forEach((x) => children.push(para(`${x.name} · ${x.issuer} (${x.year})${x.expiresAt ? ` · vence ${x.expiresAt}` : ""}`)));
+    }
+  }
 
   children.push(section("Experiencia"));
   d.cv.experience.filter((x) => x.includeInCV).forEach((x) => {
     children.push(para(`${x.role} · ${x.company}`, { bold: true }));
     children.push(para(`${x.from} — ${x.to ?? "Actualidad"}`, { color: "777777", size: 20 }));
-    children.push(para(x.description));
+    if (x.description) children.push(para(x.description));
   });
-
-  children.push(section("Educación"));
-  d.cv.education.filter((x) => x.includeInCV).forEach((x) =>
-    children.push(para(`${x.degree} · ${x.institution} (${x.year})`)));
-
-  children.push(section("Certificaciones"));
-  d.cv.certifications.filter((x) => x.includeInCV).forEach((x) =>
-    children.push(para(`${x.name} · ${x.issuer} (${x.year})`)));
 
   if (d.cv.includeCompetencies) {
     children.push(section("Competencias"));
