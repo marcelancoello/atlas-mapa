@@ -160,7 +160,28 @@ export interface CVEducation {
 export interface CVCertification {
   name: string; issuer: string; year: string;
   expiresAt?: string; includeInCV: boolean;
+  fileBase64?: string;
+  fileType?: "pdf" | "image";
+  fileName?: string;
 }
+export type EducationLevel =
+  | "Primario Incompleto" | "Primario Completo"
+  | "Secundario Incompleto" | "Secundario Completo"
+  | "Terciario Incompleto" | "Terciario Completo"
+  | "Universitario Incompleto" | "Universitario Completo"
+  | "Posgrado Incompleto" | "Posgrado Completo";
+
+export const COMPANY_TECHNOLOGIES = [
+  "React", "Angular", "Vue", "Next.js", "Node.js", "Java", "Spring Boot",
+  "Python", "Django", "FastAPI", "Go", "Ruby on Rails", ".NET", "C#",
+  "TypeScript", "JavaScript", "PHP", "Kotlin", "Swift",
+  "PostgreSQL", "MySQL", "MongoDB", "Redis", "Elasticsearch",
+  "AWS", "GCP", "Azure", "Docker", "Kubernetes", "Terraform",
+  "Jenkins", "GitHub Actions", "GitLab CI",
+  "GraphQL", "REST", "Kafka", "RabbitMQ",
+  "Cypress", "Jest", "Playwright", "Selenium",
+] as const;
+
 export type SuccessionReadiness = "Listo ahora" | "Listo en 1 año" | "Listo en 2-3 años";
 
 export interface SuccessionCandidate {
